@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technics SL-PS 740 - Independent Indicators</title>
+    <title>Technics SL-PS 740 - Authentic Labels</title>
     <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
     <style>
         :root {
@@ -309,13 +309,13 @@
         if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function handlePlay() { if(audio.src){ initAudio(); audio.play(); statusFunc.innerText = "PLAYING"; }}
+    // MODIF: Changement de PLAYING vers PLAY
+    function handlePlay() { if(audio.src){ initAudio(); audio.play(); statusFunc.innerText = "PLAY"; }}
     function handlePause() { audio.pause(); statusFunc.innerText = "PAUSE"; }
     function handleStop() { audio.pause(); audio.currentTime = 0; statusFunc.innerText = "STOP"; }
     function skip(v) { audio.currentTime += v; }
     function toggleTime() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); }
 
-    // MODIF: On ne touche plus au texte statusFunc ici
     function toggleRepeat() {
         isRepeat = !isRepeat;
         audio.loop = isRepeat;
@@ -333,7 +333,8 @@
     }
 
     function showCover() {
-        // Optionnel: On peut faire clignoter le nom du fichier ou autre
+        statusFunc.innerText = "INFO";
+        setTimeout(() => { if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAY"; }, 1500);
     }
 
     audio.ontimeupdate = () => {
@@ -355,13 +356,13 @@
 
     function resetShuttle() {
         document.getElementById('shuttle').value = 0;
-        if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAYING";
+        if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAY";
     }
 
     async function runPeak() {
         if (!audio.src) return;
         initAudio();
-        statusFunc.innerText = "SCANNING PEAK...";
+        statusFunc.innerText = "SCAN PEAK";
         const res = await fetch(audio.src);
         const buf = await res.arrayBuffer();
         const decoded = await audioCtx.decodeAudioData(buf);
@@ -372,8 +373,8 @@
         }
         audio.currentTime = idx / decoded.sampleRate;
         audio.play();
-        statusFunc.innerText = "PEAK FOUND";
-        setTimeout(() => { if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAYING"; }, 2500);
+        statusFunc.innerText = "PEAK";
+        setTimeout(() => { if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAY"; }, 2500);
     }
 
     function drawVU() {
