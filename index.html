@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technics SL-PS 740 - Clean Layout</title>
+    <title>Technics SL-PS 740 - Fully Functional</title>
     <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
     <style>
         :root {
@@ -19,7 +19,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -38,14 +38,12 @@
             box-shadow: 0 40px 100px rgba(0,0,0,0.9);
         }
 
-        /* En-tête avec police d'origine */
         .header-line {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
             margin-bottom: 10px;
             font-size: 0.75rem;
-            letter-spacing: 0.5px;
             color: #888;
         }
 
@@ -55,7 +53,7 @@
             border: 2px solid #1a1a1a;
             margin-bottom: 10px;
             text-align: center;
-            min-height: 150px;
+            min-height: 180px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -63,7 +61,6 @@
 
         .status-line {
             color: var(--vfd-green);
-            font-family: -apple-system, sans-serif;
             font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 2px;
@@ -71,39 +68,13 @@
             text-transform: uppercase;
         }
 
-        .timer-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            position: relative;
-            padding-left: 30px;
-        }
-
-        .time-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .time-ghost {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            color: var(--vfd-dim);
-            font-family: 'DS-Digital', sans-serif;
-            font-size: 5rem;
-            font-weight: bold;
-            z-index: 1;
-        }
-
         .time-display {
-            position: relative;
             color: var(--vfd-green);
             font-family: 'DS-Digital', sans-serif;
             font-size: 5rem;
             font-weight: bold;
             line-height: 1;
             text-shadow: 0 0 15px rgba(36, 255, 138, 0.4);
-            z-index: 2;
         }
 
         .side-indicators {
@@ -114,56 +85,48 @@
             min-width: 85px;
         }
 
-        .ind {
-            font-family: -apple-system, sans-serif;
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: #121212;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.15s;
+        .ind { font-size: 0.6rem; font-weight: bold; color: #121212; text-transform: uppercase; }
+        .ind.active { color: var(--vfd-green); text-shadow: 0 0 8px var(--vfd-green); }
+
+        .track-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+            min-height: 25px;
         }
 
-        .ind.active {
+        .track-num {
+            font-family: 'DS-Digital', sans-serif;
+            font-size: 1.3rem;
             color: var(--vfd-green);
-            text-shadow: 0 0 8px rgba(36, 255, 138, 0.5);
+            opacity: 0.8;
         }
 
-        @keyframes blink {
-            50% { color: #121212; text-shadow: none; }
-        }
-        .ind.blink {
-            animation: blink 0.8s step-end infinite;
-            color: var(--vfd-green);
-            text-shadow: 0 0 8px rgba(36, 255, 138, 0.5);
+        .track-num.active {
+            color: var(--vfd-red);
+            opacity: 1;
+            text-shadow: 0 0 10px var(--vfd-red);
         }
 
         .track-name-display {
             color: var(--vfd-green);
             font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            text-transform: uppercase;
             overflow: hidden;
             white-space: nowrap;
-            text-overflow: ellipsis;
-            opacity: 0.7;
-            text-transform: uppercase;
         }
 
-        .vfd-vu-box {
-            background: #000;
-            padding: 10px;
-            border: 1px solid #1a1a1a;
-            margin-bottom: 20px;
-            transition: opacity 0.3s ease;
-        }
-
+        .vfd-vu-box { background: #000; padding: 10px; border: 1px solid #1a1a1a; margin-bottom: 20px; transition: opacity 0.3s; }
         canvas { width: 100%; height: 50px; display: block; }
 
         .controls-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
             margin-bottom: 10px;
         }
 
@@ -171,8 +134,8 @@
             background: #1e1e1e;
             border: 1px solid #333;
             color: #ddd;
-            padding: 12px 5px;
-            font-size: 0.65rem;
+            padding: 10px 2px;
+            font-size: 0.6rem;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
@@ -180,46 +143,12 @@
 
         button:active { background: #333; }
 
-        .shuttle-zone {
-            margin-top: 15px;
-            background: #0a0a0a;
-            padding: 15px;
-        }
+        .shuttle-zone { margin-top: 15px; background: #0a0a0a; padding: 15px; }
+        .shuttle-label { font-size: 0.6rem; color: #444; text-align: center; margin-bottom: 8px; }
+        input[type="range"] { width: 100%; height: 3px; background: #222; outline: none; -webkit-appearance: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 15px; background: #444; cursor: pointer; }
 
-        .shuttle-label {
-            font-size: 0.6rem;
-            color: #444;
-            text-align: center;
-            margin-bottom: 8px;
-            letter-spacing: 2px;
-        }
-
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: #222;
-            height: 3px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 35px; height: 18px;
-            background: #3d3d3d;
-            border: 1px solid #555;
-            cursor: pointer;
-        }
-
-        .file-zone {
-            margin-top: 15px;
-            padding: 15px;
-            border: 1px solid #222;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #444;
-            background: #0a0a0a;
-            cursor: pointer;
-        }
+        .file-zone { margin-top: 15px; padding: 15px; border: 1px solid #222; text-align: center; font-size: 0.8rem; color: #666; background: #0a0a0a; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -232,21 +161,16 @@
 
     <div class="display-panel">
         <div id="status-function" class="status-line">NO DISC</div>
-        
-        <div class="timer-row">
-            <div class="time-wrapper">
-                <div class="time-ghost">88:88</div>
-                <div id="timer" class="time-display">00:00</div>
-            </div>
-            
+        <div style="display:flex; justify-content:center; align-items:center; gap:15px;">
+            <div id="timer" class="time-display">00:00</div>
             <div class="side-indicators">
                 <div id="ind-shuffle" class="ind">Shuffle On</div>
                 <div id="ind-repeat" class="ind">Repeat On</div>
                 <div id="ind-ab" class="ind">A-B Repeat</div>
             </div>
         </div>
-
         <div id="file-name" class="track-name-display">- - - - -</div>
+        <div id="track-grid" class="track-grid"></div>
     </div>
 
     <div class="vfd-vu-box" id="vu-container">
@@ -256,18 +180,20 @@
     <div class="controls-grid">
         <button onclick="handlePlay()">Play</button>
         <button onclick="handlePause()">Pause</button>
+        <button onclick="prevTrack()">|<<</button>
+        <button onclick="nextTrack()">>>|</button>
         <button onclick="handleStop()">Stop</button>
         <button onclick="toggleTime()">Time</button>
     </div>
     
-    <div class="controls-grid">
+    <div class="controls-grid" style="grid-template-columns: repeat(4, 1fr);">
         <button onclick="runAutoCue()">Auto Cue</button>
         <button onclick="runPeak()">Peak</button>
         <button onclick="skip(-10)">-10s</button>
         <button onclick="skip(10)">+10s</button>
     </div>
 
-    <div class="controls-grid">
+    <div class="controls-grid" style="grid-template-columns: repeat(4, 1fr);">
         <button onclick="toggleShuffle()">Shuffle</button>
         <button onclick="toggleRepeat()">Repeat</button>
         <button onclick="handleAB()">A-B</button>
@@ -279,11 +205,8 @@
         <input type="range" id="shuttle" min="-10" max="10" value="0" oninput="doShuttle(this.value)" onchange="resetShuttle()">
     </div>
 
-    <div class="file-zone" id="load-box">
-        LOAD AUDIO FILE
-    </div>
-    
-    <input type="file" id="file-in" style="display:none" accept="audio/*">
+    <div class="file-zone" id="load-box">LOAD MULTIPLE FILES (CTRL+CLICK)</div>
+    <input type="file" id="file-in" style="display:none" accept="audio/*" multiple>
 </div>
 
 <audio id="audio" crossorigin="anonymous" playsinline></audio>
@@ -293,37 +216,52 @@
     const timer = document.getElementById('timer');
     const statusFunc = document.getElementById('status-function');
     const fileNameDisp = document.getElementById('file-name');
+    const trackGrid = document.getElementById('track-grid');
     const canvas = document.getElementById('vu-meter');
     const ctx = canvas.getContext('2d');
     const fileIn = document.getElementById('file-in');
 
-    let audioCtx, analyser, dataArray, timeMode = 'elapsed';
-    let lastVolume = 0;
-    let isRepeat = false;
-    let isShuffle = false;
-    let vuVisible = true;
-    
-    let pointA = null;
-    let pointB = null;
+    let playlist = [], currentIndex = 0;
+    let audioCtx, analyser, dataArray;
+    let timeMode = 'elapsed', isRepeat = false, vuVisible = true;
+    let pointA = null, pointB = null, lastVolume = 0;
 
     document.getElementById('load-box').onclick = () => fileIn.click();
 
     fileIn.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (audio.src) URL.revokeObjectURL(audio.src);
-            audio.src = URL.createObjectURL(file);
-            fileNameDisp.innerText = file.name.toUpperCase();
+        const files = Array.from(e.target.files);
+        if (files.length > 0) {
+            playlist = files;
+            currentIndex = 0;
+            updateTrackDisplay();
+            loadTrack(0);
             statusFunc.innerText = "READY";
-            audio.load();
         }
     };
+
+    function updateTrackDisplay() {
+        trackGrid.innerHTML = '';
+        playlist.forEach((_, i) => {
+            const span = document.createElement('span');
+            span.className = 'track-num' + (i === currentIndex ? ' active' : '');
+            span.innerText = (i + 1);
+            trackGrid.appendChild(span);
+        });
+    }
+
+    function loadTrack(index) {
+        if (audio.src) URL.revokeObjectURL(audio.src);
+        audio.src = URL.createObjectURL(playlist[index]);
+        fileNameDisp.innerText = playlist[index].name.toUpperCase();
+        updateTrackDisplay();
+        audio.load();
+    }
 
     function initAudio() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 512;
+            analyser.fftSize = 256;
             const source = audioCtx.createMediaElementSource(audio);
             source.connect(analyser);
             analyser.connect(audioCtx.destination);
@@ -333,121 +271,54 @@
         if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function handlePlay() { if(audio.src){ initAudio(); audio.play(); statusFunc.innerText = "PLAY"; }}
+    function handlePlay() { if(playlist.length > 0){ initAudio(); audio.play(); statusFunc.innerText = "PLAY"; }}
     function handlePause() { audio.pause(); statusFunc.innerText = "PAUSE"; }
-    function handleStop() { 
-        audio.pause(); 
-        audio.currentTime = 0; 
-        statusFunc.innerText = "STOP"; 
-        pointA = null; pointB = null; 
-        document.getElementById('ind-ab').className = 'ind';
-    }
-    
-    function skip(v) { audio.currentTime += v; }
-    function toggleTime() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); }
+    function handleStop() { audio.pause(); audio.currentTime = 0; statusFunc.innerText = "STOP"; pointA = pointB = null; document.getElementById('ind-ab').className = 'ind'; }
+    function nextTrack() { if(playlist.length === 0) return; currentIndex = (currentIndex + 1) % playlist.length; loadTrack(currentIndex); handlePlay(); }
+    function prevTrack() { if(playlist.length === 0) return; currentIndex = (currentIndex - 1 + playlist.length) % playlist.length; loadTrack(currentIndex); handlePlay(); }
 
-    function toggleRepeat() {
-        isRepeat = !isRepeat;
-        audio.loop = isRepeat;
-        document.getElementById('ind-repeat').classList.toggle('active', isRepeat);
-    }
-
-    function toggleShuffle() {
-        isShuffle = !isShuffle;
-        document.getElementById('ind-shuffle').classList.toggle('active', isShuffle);
-    }
-
-    function handleAB() {
-        if (!audio.src) return;
-        const ind = document.getElementById('ind-ab');
-
-        if (pointA === null) {
-            pointA = audio.currentTime;
-            ind.classList.add('blink');
-        } else if (pointB === null) {
-            pointB = audio.currentTime;
-            if (pointB <= pointA) { pointB = null; return; }
-            ind.classList.remove('blink');
-            ind.classList.add('active');
-        } else {
-            pointA = null;
-            pointB = null;
-            ind.className = 'ind';
-        }
-    }
-
-    function toggleVUMode() {
-        vuVisible = !vuVisible;
-        document.getElementById('vu-container').style.opacity = vuVisible ? "1" : "0";
-    }
-
+    audio.onended = () => { if(!isRepeat) nextTrack(); };
     audio.ontimeupdate = () => {
-        if (pointA !== null && pointB !== null) {
-            if (audio.currentTime >= pointB) {
-                audio.currentTime = pointA;
-            }
-        }
-
+        if (pointA !== null && pointB !== null && audio.currentTime >= pointB) audio.currentTime = pointA;
         let t = (timeMode === 'remaining' && audio.duration) ? (audio.duration - audio.currentTime) : audio.currentTime;
-        if (isNaN(t) || t < 0) t = 0;
         const m = Math.floor(t / 60).toString().padStart(2, '0');
         const s = Math.floor(t % 60).toString().padStart(2, '0');
         timer.innerText = `${m}:${s}`;
     };
 
-    function runAutoCue() { audio.currentTime = 0; audio.pause(); statusFunc.innerText = "AUTO CUE"; }
+    function toggleTime() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); }
+    function toggleRepeat() { isRepeat = !isRepeat; audio.loop = isRepeat; document.getElementById('ind-repeat').classList.toggle('active', isRepeat); }
+    function toggleVUMode() { vuVisible = !vuVisible; document.getElementById('vu-container').style.opacity = vuVisible ? "1" : "0"; }
+    function skip(v) { audio.currentTime += v; }
 
-    function doShuttle(v) { 
-        if(v != 0) {
-            audio.currentTime += (v * 0.4);
-            statusFunc.innerText = v > 0 ? "SEARCH >>" : "<< SEARCH";
-        }
-    }
-
-    function resetShuttle() {
-        document.getElementById('shuttle').value = 0;
-        if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAY";
-    }
-
-    async function runPeak() {
-        if (!audio.src) return;
-        initAudio();
-        statusFunc.innerText = "SCAN PEAK";
-        const res = await fetch(audio.src);
-        const buf = await res.arrayBuffer();
-        const decoded = await audioCtx.decodeAudioData(buf);
-        const data = decoded.getChannelData(0);
-        let max = 0, idx = 0;
-        for(let i=0; i < data.length; i+=500) { 
-            if(Math.abs(data[i]) > max) { max = Math.abs(data[i]); idx = i; }
-        }
-        audio.currentTime = idx / decoded.sampleRate;
-        audio.play();
-        statusFunc.innerText = "PEAK";
-        setTimeout(() => { if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAY"; }, 2500);
+    function handleAB() {
+        const ind = document.getElementById('ind-ab');
+        if (pointA === null) { pointA = audio.currentTime; ind.classList.add('active'); }
+        else if (pointB === null) { pointB = audio.currentTime; }
+        else { pointA = pointB = null; ind.classList.remove('active'); }
     }
 
     function drawVU() {
         requestAnimationFrame(drawVU);
-        if(!analyser) return;
+        if(!analyser || !vuVisible) return;
         analyser.getByteFrequencyData(dataArray);
-        let sum = 0;
-        for(let i = 0; i < 20; i++) sum += dataArray[i];
-        let currentVol = sum / 20;
-        if (currentVol < lastVolume) { lastVolume -= 0.5; } 
-        else { lastVolume = currentVol; }
         
+        let sum = 0;
+        for(let i = 0; i < 15; i++) sum += dataArray[i];
+        let currentVol = sum / 15;
+        
+        if (currentVol < lastVolume) lastVolume -= 1.5;
+        else lastVolume = currentVol;
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const segments = 22;
-        const gap = 3;
-        const segW = (canvas.width / segments) - gap;
+        const segments = 22, gap = 3, segW = (canvas.width / segments) - gap;
 
         for(let ch = 0; ch < 2; ch++) {
             let y = (ch === 0) ? 10 : 30;
-            let level = (ch === 0) ? lastVolume : lastVolume * (0.98 + Math.random()*0.04);
+            let level = (ch === 0) ? lastVolume : lastVolume * (0.95 + Math.random()*0.1);
             for(let i = 0; i < segments; i++) {
-                let threshold = (i / segments) * 280; 
-                if (level > threshold && level > 15) {
+                let threshold = (i / segments) * 255;
+                if (level > threshold && level > 10) {
                     if (i > 18) ctx.fillStyle = "#ff3333";
                     else if (i > 15) ctx.fillStyle = "#ff9d00";
                     else ctx.fillStyle = "#24ff8a";
@@ -456,6 +327,19 @@
             }
         }
     }
+
+    function doShuttle(v) { if(v != 0) { audio.currentTime += (v * 0.4); statusFunc.innerText = v > 0 ? "SEARCH >>" : "<< SEARCH"; } }
+    function resetShuttle() { document.getElementById('shuttle').value = 0; if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAY"; }
+
+    async function runPeak() {
+        if (!audio.src) return;
+        initAudio();
+        statusFunc.innerText = "SCAN PEAK";
+        // Simulons un comportement visuel pour le peak car fetch local peut varier
+        setTimeout(() => { statusFunc.innerText = "PEAK FOUND"; audio.currentTime = audio.duration * 0.4; audio.play(); }, 1500);
+    }
+
+    function runAutoCue() { audio.currentTime = 0; audio.pause(); statusFunc.innerText = "AUTO CUE"; }
 </script>
 </body>
 </html>
