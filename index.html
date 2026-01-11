@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technics SL-PS 740 - Advanced Controls</title>
+    <title>Technics SL-PS 740 - Professional Indicators</title>
     <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
     <style>
         :root {
@@ -60,6 +60,15 @@
             text-transform: uppercase;
         }
 
+        /* Conteneur pour aligner le compteur et les indicateurs */
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+        }
+
         .time-wrapper {
             position: relative;
             display: inline-block;
@@ -84,6 +93,30 @@
             line-height: 1;
             text-shadow: 0 0 15px rgba(36, 255, 138, 0.4);
             z-index: 2;
+        }
+
+        /* Zone des indicateurs à droite */
+        .side-indicators {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-align: left;
+            min-width: 80px;
+        }
+
+        .ind {
+            font-family: -apple-system, sans-serif;
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #151515; /* Éteint par défaut */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+        }
+
+        .ind.active {
+            color: var(--vfd-green);
+            text-shadow: 0 0 8px rgba(36, 255, 138, 0.5);
         }
 
         .track-name-display {
@@ -123,11 +156,9 @@
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
-            transition: all 0.1s;
         }
 
-        button:active { background: #333; color: var(--vfd-green); }
-        button.active { color: var(--vfd-green); border-color: var(--vfd-green); }
+        button:active { background: #333; }
 
         .shuttle-zone {
             margin-top: 15px;
@@ -181,10 +212,19 @@
 
     <div class="display-panel">
         <div id="status-function" class="status-line">NO DISC</div>
-        <div class="time-wrapper">
-            <div class="time-ghost">88:88</div>
-            <div id="timer" class="time-display">00:00</div>
+        
+        <div class="timer-row">
+            <div class="time-wrapper">
+                <div class="time-ghost">88:88</div>
+                <div id="timer" class="time-display">00:00</div>
+            </div>
+            
+            <div class="side-indicators">
+                <div id="ind-shuffle" class="ind">Shuffle On</div>
+                <div id="ind-repeat" class="ind">Repeat On</div>
+            </div>
         </div>
+
         <div id="file-name" class="track-name-display">- - - - -</div>
     </div>
 
@@ -207,8 +247,8 @@
     </div>
 
     <div class="controls-grid">
-        <button id="btn-shuffle" onclick="toggleShuffle()">Shuffle</button>
-        <button id="btn-repeat" onclick="toggleRepeat()">Repeat</button>
+        <button onclick="toggleShuffle()">Shuffle</button>
+        <button onclick="toggleRepeat()">Repeat</button>
         <button onclick="toggleVUMode()">VU</button>
         <button onclick="showCover()">Cover</button>
     </div>
@@ -275,24 +315,23 @@
     function skip(v) { audio.currentTime += v; }
     function toggleTime() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); }
 
-    // Toggle Functions
     function toggleRepeat() {
         isRepeat = !isRepeat;
         audio.loop = isRepeat;
-        document.getElementById('btn-repeat').classList.toggle('active', isRepeat);
-        statusFunc.innerText = isRepeat ? "REPEAT ON" : "REPEAT OFF";
+        document.getElementById('ind-repeat').classList.toggle('active', isRepeat);
+        statusFunc.innerText = isRepeat ? "REPEAT MODE" : "NORMAL MODE";
     }
 
     function toggleShuffle() {
         isShuffle = !isShuffle;
-        document.getElementById('btn-shuffle').classList.toggle('active', isShuffle);
-        statusFunc.innerText = isShuffle ? "SHUFFLE ON" : "SHUFFLE OFF";
+        document.getElementById('ind-shuffle').classList.toggle('active', isShuffle);
+        statusFunc.innerText = isShuffle ? "SHUFFLE MODE" : "NORMAL MODE";
     }
 
     function toggleVUMode() {
         vuVisible = !vuVisible;
         document.getElementById('vu-container').style.opacity = vuVisible ? "1" : "0.1";
-        statusFunc.innerText = vuVisible ? "VU METER ON" : "VU METER OFF";
+        statusFunc.innerText = vuVisible ? "VU ON" : "VU DIM";
     }
 
     function showCover() {
