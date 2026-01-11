@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technics SL-PS 740 - Pro VFD</title>
+    <title>Technics SL-PS 740 - Pro VFD Final</title>
     <style>
         :root {
             --bg-color: #080808;
@@ -178,7 +178,7 @@
 
     <div class="shuttle-zone">
         <div class="shuttle-label">JOG SHUTTLE</div>
-        <input type="range" id="shuttle" min="-10" max="10" value="0" oninput="doShuttle(this.value)" onchange="this.value=0">
+        <input type="range" id="shuttle" min="-10" max="10" value="0" oninput="doShuttle(this.value)" onchange="resetShuttle()">
     </div>
 
     <div class="file-zone" id="load-box">
@@ -253,8 +253,15 @@
         if(v != 0) {
             audio.currentTime += (v * 0.4);
             statusFunc.innerText = v > 0 ? "SEARCH >>" : "<< SEARCH";
+        }
+    }
+
+    function resetShuttle() {
+        document.getElementById('shuttle').value = 0;
+        if (audio.src) {
+            statusFunc.innerText = audio.paused ? "PAUSE" : "PLAYING";
         } else {
-            if(!audio.paused) statusFunc.innerText = "PLAYING";
+            statusFunc.innerText = "READY";
         }
     }
 
@@ -273,7 +280,9 @@
         audio.currentTime = idx / decoded.sampleRate;
         audio.play();
         statusFunc.innerText = "PEAK FOUND";
-        setTimeout(() => { if(audio.paused) statusFunc.innerText = "STOP"; else statusFunc.innerText = "PLAYING"; }, 2500);
+        setTimeout(() => { 
+            statusFunc.innerText = audio.paused ? "PAUSE" : "PLAYING";
+        }, 2500);
     }
 
     function drawVU() {
@@ -285,7 +294,6 @@
         for(let i = 0; i < 20; i++) sum += dataArray[i];
         let currentVol = sum / 20;
 
-        // Amortissement TRÈS lent (Inertie VFD)
         if (currentVol < lastVolume) {
             lastVolume -= 0.5; 
         } else {
@@ -294,7 +302,6 @@
         if (lastVolume < 0) lastVolume = 0;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
         const segments = 22;
         const gap = 3;
         const segW = (canvas.width / segments) - gap;
@@ -302,9 +309,7 @@
         for(let ch = 0; ch < 2; ch++) {
             let y = (ch === 0) ? 10 : 30;
             let level = (ch === 0) ? lastVolume : lastVolume * (0.98 + Math.random()*0.04);
-
             for(let i = 0; i < segments; i++) {
-                // Seuil de déclenchement TRÈS haut (280) pour une sensibilité minimale
                 let threshold = (i / segments) * 280; 
                 if (level > threshold && level > 15) {
                     if (i > 18) ctx.fillStyle = "#ff3333";
