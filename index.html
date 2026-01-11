@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technics SL-PS 740 - Professional Indicators</title>
+    <title>Technics SL-PS 740 - Independent Indicators</title>
     <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
     <style>
         :root {
@@ -60,13 +60,13 @@
             text-transform: uppercase;
         }
 
-        /* Conteneur pour aligner le compteur et les indicateurs */
         .timer-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             position: relative;
+            padding-left: 30px;
         }
 
         .time-wrapper {
@@ -95,23 +95,22 @@
             z-index: 2;
         }
 
-        /* Zone des indicateurs à droite */
         .side-indicators {
             display: flex;
             flex-direction: column;
             gap: 5px;
             text-align: left;
-            min-width: 80px;
+            min-width: 85px;
         }
 
         .ind {
             font-family: -apple-system, sans-serif;
             font-size: 0.6rem;
             font-weight: bold;
-            color: #151515; /* Éteint par défaut */
+            color: #121212;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: color 0.2s;
+            transition: color 0.15s;
         }
 
         .ind.active {
@@ -136,6 +135,7 @@
             padding: 10px;
             border: 1px solid #1a1a1a;
             margin-bottom: 20px;
+            transition: opacity 0.3s ease;
         }
 
         canvas { width: 100%; height: 50px; display: block; }
@@ -315,27 +315,25 @@
     function skip(v) { audio.currentTime += v; }
     function toggleTime() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); }
 
+    // MODIF: On ne touche plus au texte statusFunc ici
     function toggleRepeat() {
         isRepeat = !isRepeat;
         audio.loop = isRepeat;
         document.getElementById('ind-repeat').classList.toggle('active', isRepeat);
-        statusFunc.innerText = isRepeat ? "REPEAT MODE" : "NORMAL MODE";
     }
 
     function toggleShuffle() {
         isShuffle = !isShuffle;
         document.getElementById('ind-shuffle').classList.toggle('active', isShuffle);
-        statusFunc.innerText = isShuffle ? "SHUFFLE MODE" : "NORMAL MODE";
     }
 
     function toggleVUMode() {
         vuVisible = !vuVisible;
-        document.getElementById('vu-container').style.opacity = vuVisible ? "1" : "0.1";
-        statusFunc.innerText = vuVisible ? "VU ON" : "VU DIM";
+        document.getElementById('vu-container').style.opacity = vuVisible ? "1" : "0";
     }
 
     function showCover() {
-        statusFunc.innerText = "NO COVER ART";
+        // Optionnel: On peut faire clignoter le nom du fichier ou autre
     }
 
     audio.ontimeupdate = () => {
@@ -375,7 +373,7 @@
         audio.currentTime = idx / decoded.sampleRate;
         audio.play();
         statusFunc.innerText = "PEAK FOUND";
-        setTimeout(() => { statusFunc.innerText = audio.paused ? "PAUSE" : "PLAYING"; }, 2500);
+        setTimeout(() => { if (audio.src) statusFunc.innerText = audio.paused ? "PAUSE" : "PLAYING"; }, 2500);
     }
 
     function drawVU() {
