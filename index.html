@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technics SL-PS 740 - VFD Edition</title>
+    <title>Technics SL-PS 740 - Pro Edition</title>
     <style>
         :root {
-            --bg-color: #0d0d0d;
-            --panel-color: #1a1a1a;
-            --accent-color: #d4af37;
-            --display-color: #32ff7e; /* Le vert fluo classique */
-            --text-color: #e0e0e0;
+            --bg-color: #0a0a0a;
+            --panel-color: #161616;
+            --display-color: #32ff7e;
+            --text-color: #c0c0c0;
+            --btn-bg: #222;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,18 +27,18 @@
 
         .player-container {
             background: var(--panel-color);
-            padding: 25px;
+            padding: 30px;
             border-radius: 4px;
             width: 90%;
             max-width: 600px;
-            border: 1px solid #333;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
         }
 
         .brand-header {
             display: flex;
             justify-content: space-between;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #666;
             margin-bottom: 15px;
             text-transform: uppercase;
@@ -53,16 +53,23 @@
             text-align: center;
         }
 
+        .track-info {
+            color: var(--display-color);
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
         .time-display {
             color: var(--display-color);
             font-family: 'Courier New', monospace;
             font-size: 3.5rem;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(50, 255, 126, 0.4);
+            text-shadow: 0 0 10px rgba(50, 255, 126, 0.3);
         }
 
-        /* Container pour le VU-Mètre */
-        .vfd-container {
+        .vfd-vu-container {
             background: #000;
             padding: 10px;
             border: 1px solid #222;
@@ -71,7 +78,7 @@
 
         canvas {
             width: 100%;
-            height: 50px;
+            height: 60px;
             display: block;
         }
 
@@ -82,63 +89,62 @@
         }
 
         button {
-            background: #252525;
-            border: 1px solid #444;
-            color: #fff;
+            background: var(--btn-bg);
+            border: 1px solid #333;
+            color: #eee;
             padding: 15px 5px;
             font-size: 0.7rem;
             font-weight: bold;
             cursor: pointer;
+            text-transform: uppercase;
             -webkit-appearance: none;
         }
 
+        button:active { background: #444; }
+
         .shuttle-zone {
-            margin-top: 20px;
-            background: #050505;
+            margin-top: 25px;
+            background: #0d0d0d;
             padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            border-radius: 4px;
         }
 
         .shuttle-label {
-            font-size: 0.65rem;
-            color: #888;
-            letter-spacing: 1px;
+            font-size: 0.6rem;
+            color: #555;
             text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
         }
 
+        /* Jog Shuttle Slider Styling (No Yellow) */
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
-            background: #333;
+            background: #2a2a2a;
             height: 4px;
-            border-radius: 2px;
             outline: none;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #666;
-            border: 1px solid #999;
+            width: 30px;
+            height: 18px;
+            background: #444;
+            border: 1px solid #666;
             border-radius: 2px;
             cursor: pointer;
         }
 
-        .file-zone {
+        .file-upload {
             margin-top: 20px;
-            padding: 20px;
-            border: 1px solid #333;
+            padding: 15px;
+            border: 1px dashed #333;
             text-align: center;
-            cursor: pointer;
             font-size: 0.8rem;
             color: #888;
-            background: #111;
+            cursor: pointer;
         }
-
-        #file-selector { display: none; }
     </style>
 </head>
 <body>
@@ -146,38 +152,38 @@
 <div class="player-container">
     <div class="brand-header">
         <span>Technics</span>
-        <span>SL-PS 740 / MASH 1-BIT</span>
+        <span>SL-PS 740 / MASH 1-BIT DAC</span>
     </div>
 
     <div class="display-panel">
-        <div id="track-status" style="color: var(--display-color); font-size: 0.8rem; margin-bottom: 5px; font-family: 'Courier New', monospace;">NO DISC</div>
+        <div id="status" class="track-info">NO DISC</div>
         <div id="timer" class="time-display">00:00</div>
     </div>
 
-    <div class="vfd-container">
+    <div class="vfd-vu-container">
         <canvas id="vu-meter"></canvas>
     </div>
 
     <div class="controls-grid">
-        <button onclick="handlePlay()">PLAY</button>
-        <button onclick="handlePause()">PAUSE</button>
-        <button onclick="handleStop()">STOP</button>
-        <button onclick="toggleTimeMode()">TIME</button>
-        <button onclick="runAutoCue()">AUTO CUE</button>
-        <button onclick="runPeakSearch()">PEAK</button>
+        <button onclick="handlePlay()">Play</button>
+        <button onclick="handlePause()">Pause</button>
+        <button onclick="handleStop()">Stop</button>
+        <button onclick="toggleTime()">Time</button>
+        <button onclick="runAutoCue()">Auto Cue</button>
+        <button onclick="runPeak()">Peak Search</button>
         <button onclick="skip(-10)">-10s</button>
         <button onclick="skip(10)">+10s</button>
     </div>
 
     <div class="shuttle-zone">
         <div class="shuttle-label">JOG SHUTTLE</div>
-        <input type="range" id="shuttle" min="-10" max="10" value="0" oninput="doShuttle(this.value)" onchange="this.value=0">
+        <input type="range" id="shuttle" min="-10" max="10" value="0" oninput="doShuttle(this.value)" onchange="resetShuttle()">
     </div>
 
-    <div class="file-zone" onclick="document.getElementById('file-selector').click()">
-        LOAD AUDIO (MP3, M4A, FLAC, WAV)
+    <div class="file-upload" onclick="document.getElementById('file-input').click()">
+        LOAD AUDIO (MP3, FLAC, WAV, ALAC, AAC)
     </div>
-    <input type="file" id="file-selector" accept="audio/*, .mp3, .m4a, .mp4, .wav, .flac, .alac">
+    <input type="file" id="file-input" style="display:none" accept="audio/*, .mp3, .m4a, .mp4, .aac, .wav, .flac, .alac">
 </div>
 
 <audio id="audio-engine" crossorigin="anonymous" playsinline></audio>
@@ -185,44 +191,53 @@
 <script>
     const audio = document.getElementById('audio-engine');
     const timer = document.getElementById('timer');
-    const status = document.getElementById('track-status');
+    const statusDisp = document.getElementById('status');
     const canvas = document.getElementById('vu-meter');
     const ctx = canvas.getContext('2d');
+    const shuttle = document.getElementById('shuttle');
 
     let audioCtx, analyser, dataArray, source, timeMode = 'elapsed';
 
-    const savePrefs = () => localStorage.setItem('technics_prefs', JSON.stringify({timeMode}));
+    // Settings persistence
+    const loadPrefs = () => {
+        const saved = JSON.parse(localStorage.getItem('technics_prefs'));
+        if (saved) timeMode = saved.timeMode || 'elapsed';
+    };
 
-    document.getElementById('file-selector').onchange = (e) => {
+    const savePrefs = () => {
+        localStorage.setItem('technics_prefs', JSON.stringify({ timeMode }));
+    };
+
+    // iPad File Selection Fix
+    document.getElementById('file-input').onchange = (e) => {
         const file = e.target.files[0];
         if (file) {
             audio.src = URL.createObjectURL(file);
-            status.innerText = file.name.toUpperCase();
+            statusDisp.innerText = file.name.toUpperCase().substring(0, 24);
             audio.load();
-            savePrefs();
         }
     };
 
     function initAudio() {
         if (!audioCtx) {
-            const AC = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AC();
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
             analyser = audioCtx.createAnalyser();
             analyser.fftSize = 256;
             source = audioCtx.createMediaElementSource(audio);
             source.connect(analyser);
             analyser.connect(audioCtx.destination);
             dataArray = new Uint8Array(analyser.frequencyBinCount);
-            drawVUMeter();
+            drawVU();
         }
         if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function handlePlay() { if(audio.src){ initAudio(); audio.play(); status.innerText = "PLAYING"; }}
-    function handlePause() { audio.pause(); status.innerText = "PAUSED"; }
-    function handleStop() { audio.pause(); audio.currentTime = 0; status.innerText = "STOPPED"; }
-    function skip(v) { audio.currentTime += v; }
-    function toggleTimeMode() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); savePrefs(); }
+    function handlePlay() { if(audio.src){ initAudio(); audio.play(); statusDisp.innerText = "PLAYING"; }}
+    function handlePause() { audio.pause(); statusDisp.innerText = "PAUSED"; }
+    function handleStop() { audio.pause(); audio.currentTime = 0; statusDisp.innerText = "STOPPED"; }
+    function skip(val) { audio.currentTime += val; }
+    function toggleTime() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); savePrefs(); }
 
     audio.ontimeupdate = () => {
         let t = (timeMode === 'remaining' && audio.duration) ? (audio.duration - audio.currentTime) : audio.currentTime;
@@ -232,74 +247,73 @@
         timer.innerText = `${m}:${s}`;
     };
 
-    function runAutoCue() { audio.currentTime = 0; audio.pause(); status.innerText = "AUTO CUE"; }
+    // Technics Special Features
+    function runAutoCue() { audio.currentTime = 0; audio.pause(); statusDisp.innerText = "AUTO CUE"; }
 
-    async function runPeakSearch() {
+    async function runPeak() {
         if (!audio.src) return;
         initAudio();
-        status.innerText = "SCANNING PEAK...";
-        const resp = await fetch(audio.src);
-        const buf = await resp.arrayBuffer();
-        const decoded = await audioCtx.decodeAudioData(buf);
+        statusDisp.innerText = "PEAK SEARCHING...";
+        const response = await fetch(audio.src);
+        const buffer = await response.arrayBuffer();
+        const decoded = await audioCtx.decodeAudioData(buffer);
         const data = decoded.getChannelData(0);
         let max = 0, idx = 0;
-        for(let i=0; i < data.length; i++) {
+        for(let i=0; i < data.length; i+=100) { // Sampled for speed
             if(Math.abs(data[i]) > max) { max = Math.abs(data[i]); idx = i; }
         }
         audio.currentTime = idx / decoded.sampleRate;
         audio.play();
-        status.innerText = "PEAK FOUND";
-        setTimeout(() => audio.pause(), 3000);
+        statusDisp.innerText = "PEAK FOUND";
+        setTimeout(() => audio.pause(), 2500);
     }
 
     function doShuttle(v) { if(v != 0) audio.currentTime += (v * 0.4); }
+    function resetShuttle() { shuttle.value = 0; }
 
-    // --- Logique du VU-Mètre Technics (Segments VFD) ---
-    function drawVUMeter() {
-        requestAnimationFrame(drawVUMeter);
+    // Technics VFD VU-Meter Logic
+    function drawVU() {
+        requestAnimationFrame(drawVU);
         if(!analyser) return;
 
         analyser.getByteFrequencyData(dataArray);
         
-        // Calcul du volume moyen (RMS simplifié)
-        let average = 0;
-        for(let i = 0; i < dataArray.length; i++) {
-            average += dataArray[i];
-        }
-        let volume = average / dataArray.length;
+        // Dynamic Peak Detection for responsiveness
+        let peak = 0;
+        for(let i = 0; i < 20; i++) { if(dataArray[i] > peak) peak = dataArray[i]; }
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const segments = 24;
+        const gap = 3;
+        const segW = (canvas.width / segments) - gap;
+        const segH = 12;
 
-        const segments = 20; // Nombre de carrés par canal
-        const gap = 4;
-        const segWidth = (canvas.width / segments) - gap;
-        const segHeight = 15;
-
-        // On dessine les deux canaux (L et R)
         for(let ch = 0; ch < 2; ch++) {
-            let y = (ch === 0) ? 5 : 30;
-            
+            let y = (ch === 0) ? 10 : 30;
+            // Slight variation for R channel to simulate stereo
+            let chLevel = (ch === 0) ? peak : peak * (0.92 + Math.random() * 0.15);
+
             for(let i = 0; i < segments; i++) {
-                let threshold = (i / segments) * 180; // Sensibilité
+                let threshold = (i / segments) * 230;
                 
-                // Style Technics : les derniers segments (peak) sont rouges/orange
-                if (volume > threshold) {
-                    if (i > segments * 0.8) ctx.fillStyle = "#ff4d4d"; // Red peak
-                    else if (i > segments * 0.6) ctx.fillStyle = "#ffb347"; // Orange warning
-                    else ctx.fillStyle = "var(--display-color)"; // Green standard
+                if (chLevel > threshold && chLevel > 5) {
+                    if (i > segments * 0.85) ctx.fillStyle = "#ff3e3e"; // Red
+                    else if (i > segments * 0.7) ctx.fillStyle = "#ffb347"; // Orange
+                    else ctx.fillStyle = "var(--display-color)"; // Green
                 } else {
-                    ctx.fillStyle = "#1a1a1a"; // Segment éteint
+                    ctx.fillStyle = "#1a1a1a"; // Off
                 }
-                
-                ctx.fillRect(i * (segWidth + gap), y, segWidth, segHeight);
+                ctx.fillRect(i * (segW + gap), y, segW, segH);
             }
         }
+        // dB markings
+        ctx.fillStyle = "#444";
+        ctx.font = "9px monospace";
+        ctx.fillText("-∞ -30 -15 -10 -5 -3  0 OVER", 5, 55);
     }
 
-    window.onload = () => {
-        const saved = JSON.parse(localStorage.getItem('technics_prefs'));
-        if(saved) timeMode = saved.timeMode || 'elapsed';
-    };
+    window.onload = loadPrefs;
 </script>
 </body>
 </html>
