@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Technics SL-PS 740 - Navigation Fix</title>
+    <title>Technics SL-PS 740 - A-B UI Fix</title>
     <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
     <style>
         :root {
             --bg-color: #080808;
             --panel-color: #141414;
             --vfd-green: #24ff8a;
-            --vfd-dim: rgba(36, 255, 138, 0.05);
-            --vfd-orange: #ff9d00;
             --vfd-red: #ff3333;
             --text-color: #b0b0b0;
         }
@@ -82,11 +80,27 @@
             flex-direction: column;
             gap: 5px;
             text-align: left;
-            min-width: 90px;
+            min-width: 140px; /* Élargi pour la ligne horizontale */
         }
 
-        .ind { font-size: 0.6rem; font-weight: bold; color: #121212; text-transform: uppercase; letter-spacing: 1px; transition: color 0.2s; }
-        .ind.active { color: var(--vfd-green); text-shadow: 0 0 8px var(--vfd-green); }
+        /* Ligne du haut : Shuffle et A-B */
+        .ind-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .ind { 
+            font-size: 0.6rem; 
+            font-weight: bold; 
+            color: #121212; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            transition: color 0.2s; 
+        }
+        .ind.active { 
+            color: var(--vfd-green); 
+            text-shadow: 0 0 8px var(--vfd-green); 
+        }
 
         .track-grid {
             display: flex;
@@ -148,7 +162,10 @@
         <div style="display:flex; justify-content:center; align-items:center; gap:15px;">
             <div id="timer" class="time-display">00:00</div>
             <div class="side-indicators">
-                <div id="ind-shuffle" class="ind">Shuffle On</div>
+                <div class="ind-row">
+                    <div id="ind-shuffle" class="ind">Shuffle On</div>
+                    <div id="ind-ab" class="ind">A-B Repeat</div>
+                </div>
                 <div id="ind-repeat1" class="ind">Repeat 1</div>
                 <div id="ind-repeatAll" class="ind">Repeat All</div>
             </div>
@@ -256,27 +273,18 @@
         if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function handlePlay() { 
-        if(playlist.length > 0){ 
-            initAudio(); 
-            audio.play(); 
-            statusFunc.innerText = "PLAY"; 
-        } 
-    }
+    function handlePlay() { if(playlist.length > 0){ initAudio(); audio.play(); statusFunc.innerText = "PLAY"; } }
     function handlePause() { audio.pause(); statusFunc.innerText = "PAUSE"; }
-    function handleStop() { audio.pause(); audio.currentTime = 0; statusFunc.innerText = "STOP"; pointA = pointB = null; }
+    function handleStop() { 
+        audio.pause(); audio.currentTime = 0; statusFunc.innerText = "STOP"; 
+        pointA = pointB = null; 
+        document.getElementById('ind-ab').classList.remove('active');
+    }
 
-    // Navigation fixée : On change d'index d'abord, on charge, puis on joue si nécessaire
     function nextTrack() {
         if(playlist.length === 0) return;
         let wasPlaying = !audio.paused;
-        
-        if(isShuffle) {
-            currentIndex = Math.floor(Math.random() * playlist.length);
-        } else {
-            currentIndex = (currentIndex + 1) % playlist.length;
-        }
-        
+        currentIndex = isShuffle ? Math.floor(Math.random() * playlist.length) : (currentIndex + 1) % playlist.length;
         loadTrack(currentIndex);
         if(wasPlaying) handlePlay();
     }
@@ -290,19 +298,11 @@
     }
 
     audio.onended = () => {
-        if (repeatMode === 1) { 
-            audio.currentTime = 0; 
-            audio.play(); 
-        } else if (repeatMode === 2) { 
-            nextTrack(); 
-            handlePlay(); 
-        } else {
-            if (currentIndex < playlist.length - 1 || isShuffle) { 
-                nextTrack(); 
-                handlePlay(); 
-            } else { 
-                handleStop(); 
-            }
+        if (repeatMode === 1) { audio.currentTime = 0; audio.play(); } 
+        else if (repeatMode === 2) { nextTrack(); handlePlay(); } 
+        else {
+            if (currentIndex < playlist.length - 1 || isShuffle) { nextTrack(); handlePlay(); } 
+            else { handleStop(); }
         }
     };
 
@@ -330,17 +330,24 @@
     function skip(v) { audio.currentTime += v; }
 
     function handleAB() {
-        if (pointA === null) pointA = audio.currentTime;
-        else if (pointB === null) pointB = audio.currentTime;
-        else pointA = pointB = null;
+        const ind = document.getElementById('ind-ab');
+        if (pointA === null) { 
+            pointA = audio.currentTime; 
+            ind.classList.add('active'); // S'allume au premier clic (Point A)
+        } else if (pointB === null) { 
+            pointB = audio.currentTime; 
+            // Reste allumé (Point B validé)
+        } else { 
+            pointA = pointB = null; 
+            ind.classList.remove('active'); // S'éteint si on annule
+        }
     }
 
     function drawVU() {
         requestAnimationFrame(drawVU);
         if(!analyser || !vuVisible) return;
         analyser.getByteFrequencyData(dataArray);
-        let sum = 0;
-        for(let i = 0; i < 15; i++) sum += dataArray[i];
+        let sum = 0; for(let i = 0; i < 15; i++) sum += dataArray[i];
         let currentVol = sum / 15;
         if (currentVol < lastVolume) lastVolume -= 1.5; else lastVolume = currentVol;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
