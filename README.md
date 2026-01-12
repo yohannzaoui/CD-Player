@@ -4,8 +4,8 @@
 
 ## ⚙️ Core Specifications
 
-* **Author & Owner**: **Yohann Zaoui**
-* **Copyright**: © 2026 Yohann Zaoui. All rights reserved.
+* **Author & Owner**: Yohann Zaoui
+* **Copyright**: Copyright © 2026 Yohann Zaoui. All rights reserved.
 * **Brand**: Technics
 * **Model**: SL-PS740A
 * **Technology**: MASH 1-BIT DAC Simulation
@@ -121,3 +121,4 @@ The player automatically extracts embedded **Album Art** from audio files using 
 | **Audio Logic** | Fixed volume display persistence and peak search simulation. |
 
 ---
+
