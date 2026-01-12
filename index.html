@@ -54,11 +54,10 @@
             border: 2px solid #1a1a1a;
             margin-bottom: 20px;
             text-align: center;
-            min-height: 220px;
+            min-height: 250px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
         }
 
         .status-line {
@@ -69,27 +68,6 @@
             height: 1.2rem;
             text-transform: uppercase;
         }
-
-        .track-name-display {
-            color: var(--vfd-green);
-            font-family: 'Courier New', monospace;
-            font-size: 0.7rem;
-            opacity: 0.6;
-            text-transform: uppercase;
-            overflow: hidden;
-            white-space: nowrap;
-            margin-bottom: 5px;
-        }
-
-        /* VU Meter intégré */
-        .vfd-vu-container {
-            height: 40px;
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        canvas { width: 100%; height: 35px; display: block; }
 
         .time-display {
             color: var(--vfd-green);
@@ -116,14 +94,24 @@
         }
         .ind.active { color: var(--vfd-green); text-shadow: 0 0 8px var(--vfd-green); }
 
+        .track-name-display {
+            color: var(--vfd-green);
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            text-transform: uppercase;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 5px 0;
+        }
+
         .track-grid {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin-top: 10px;
+            padding: 10px 0;
             border-top: 1px solid #111;
-            padding-top: 10px;
         }
 
         .track-num {
@@ -132,7 +120,6 @@
             font-weight: 600;
             color: var(--vfd-green);
             opacity: 0.3;
-            letter-spacing: 1px;
         }
 
         .track-num.active {
@@ -140,6 +127,14 @@
             opacity: 1;
             text-shadow: 0 0 10px var(--vfd-red);
         }
+
+        /* VU Meter intégré en bas de l'afficheur */
+        .vfd-vu-integrated {
+            width: 100%;
+            height: 35px;
+            margin-top: 5px;
+        }
+        canvas { width: 100%; height: 100%; display: block; }
 
         .controls-grid {
             display: grid;
@@ -178,12 +173,6 @@
     <div class="display-panel">
         <div id="status-function" class="status-line">NO DISC</div>
         
-        <div id="file-name" class="track-name-display">- - - - -</div>
-        
-        <div class="vfd-vu-container" id="vu-container">
-            <canvas id="vu-meter"></canvas>
-        </div>
-
         <div style="display:flex; justify-content:center; align-items:center; gap:15px;">
             <div id="timer" class="time-display">00:00</div>
             <div class="side-indicators">
@@ -196,7 +185,13 @@
             </div>
         </div>
 
+        <div id="file-name" class="track-name-display">- - - - -</div>
+        
         <div id="track-grid" class="track-grid"></div>
+
+        <div class="vfd-vu-integrated" id="vu-container">
+            <canvas id="vu-meter"></canvas>
+        </div>
     </div>
 
     <div class="controls-grid">
