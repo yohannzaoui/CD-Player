@@ -103,10 +103,20 @@
             font-weight: bold;
             line-height: 1;
             text-shadow: 0 0 15px rgba(36, 255, 138, 0.4);
-            font-variant-numeric: tabular-nums;
-            min-width: 5ch;
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .time-display span {
+            width: 1ch;
             text-align: center;
+            display: inline-block;
+        }
+
+        .time-display .separator {
+            width: 0.4ch;
+            margin-bottom: 0.1em;
         }
 
         .side-indicators {
@@ -214,11 +224,12 @@
         <div id="status-function" class="status-line">NO DISC</div>
         
         <div style="display:flex; justify-content:center; align-items:center; gap:15px;">
-            <div id="timer" class="time-display">00:00</div>
+            <div id="timer" class="time-display">
+                <span id="m1">0</span><span id="m2">0</span><span class="separator">:</span><span id="s1">0</span><span id="s2">0</span>
+            </div>
             <div class="side-indicators">
                 <div class="ind-row">
-                    <div id="ind-shuffle" class="ind">Shuffle On</div>
-                    <div id="ind-ab" class="ind">A-B Repeat</div>
+                    <div id="ind-shuffle" class="ind">Shuffle</div> <div id="ind-ab" class="ind">A-B Repeat</div>
                 </div>
                 <div id="ind-repeat1" class="ind">Repeat 1</div>
                 <div id="ind-repeatAll" class="ind">Repeat All</div>
@@ -237,7 +248,9 @@
     <div class="controls-grid">
         <button onclick="handlePlay()">Play</button>
         <button onclick="handlePause()">Pause</button>
-        <button onclick="prevTrack()"><<</button> <button onclick="nextTrack()">>></button> <button onclick="handleStop()">Stop</button>
+        <button onclick="prevTrack()"><<</button>
+        <button onclick="nextTrack()">>></button>
+        <button onclick="handleStop()">Stop</button>
         <button onclick="toggleTime()">Time</button>
     </div>
     
@@ -272,13 +285,17 @@
 
 <script>
     const audio = document.getElementById('audio');
-    const timer = document.getElementById('timer');
     const statusFunc = document.getElementById('status-function');
     const fileNameDisp = document.getElementById('file-name');
     const trackGrid = document.getElementById('track-grid');
     const canvas = document.getElementById('vu-meter');
     const ctx = canvas.getContext('2d');
     const fileIn = document.getElementById('file-in');
+
+    const m1 = document.getElementById('m1');
+    const m2 = document.getElementById('m2');
+    const s1 = document.getElementById('s1');
+    const s2 = document.getElementById('s2');
 
     let playlist = [], currentIndex = 0;
     let audioCtx, analyser, dataArray;
@@ -294,7 +311,7 @@
         currentIndex = 0;
         audio.src = "";
         fileIn.value = "";
-        timer.innerText = "00:00";
+        m1.innerText = "0"; m2.innerText = "0"; s1.innerText = "0"; s2.innerText = "0";
         statusFunc.innerText = "NO DISC";
         fileNameDisp.innerText = "- - - - -";
         trackGrid.innerHTML = "";
@@ -395,9 +412,9 @@
     audio.ontimeupdate = () => {
         if (pointA !== null && pointB !== null && audio.currentTime >= pointB) audio.currentTime = pointA;
         let t = (timeMode === 'remaining' && audio.duration) ? (audio.duration - audio.currentTime) : audio.currentTime;
-        const m = Math.floor(t / 60).toString().padStart(2, '0');
-        const s = Math.floor(t % 60).toString().padStart(2, '0');
-        timer.innerText = `${m}:${s}`;
+        const mm = Math.floor(t / 60).toString().padStart(2, '0');
+        const ss = Math.floor(t % 60).toString().padStart(2, '0');
+        m1.innerText = mm[0]; m2.innerText = mm[1]; s1.innerText = ss[0]; s2.innerText = ss[1];
     };
 
     function toggleTime() { timeMode = (timeMode === 'elapsed' ? 'remaining' : 'elapsed'); }
@@ -453,7 +470,6 @@
     function runAutoCue() { audio.currentTime = 0; audio.pause(); statusFunc.innerText = "AUTO CUE"; }
     function runPeak() { statusFunc.innerText = "PEAK"; setTimeout(() => { statusFunc.innerText = "PLAY"; audio.currentTime = audio.duration * 0.3; audio.play(); }, 1000); }
 
-    // --- Media Session API Integration ---
     function updateMediaSession() {
         if ('mediaSession' in navigator && playlist.length > 0) {
             const track = playlist[currentIndex];
