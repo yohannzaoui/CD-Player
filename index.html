@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Technics SL-PS740A</title>
     
+    <meta name="author" content="Yohann Zaoui">
+    <meta name="copyright" content="Copyright © 2026 Yohann Zaoui. All rights reserved.">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SL-PS740A">
@@ -22,7 +24,7 @@
             --bg-color: #080808;
             --panel-color: #141414;
             --vfd-green: #24ff8a;
-            --vfd-red: #ff3333; /* Rouge VFD pour les alertes et formats */
+            --vfd-red: #ff3333;
             --text-color: #b0b0b0;
         }
 
@@ -78,7 +80,6 @@
         .ind { font-size: 0.6rem; font-weight: bold; color: #121212; text-transform: uppercase; }
         .ind.active { color: var(--vfd-green); text-shadow: 0 0 8px var(--vfd-green); }
 
-        /* Style de l'indicateur de format passé en rouge */
         #format-info { 
             font-size: 0.65rem; 
             font-weight: 900; 
@@ -246,8 +247,6 @@
         const file = playlist[index];
         if (audio.src) URL.revokeObjectURL(audio.src);
         audio.src = URL.createObjectURL(file);
-        
-        // Mise à jour du format en rouge
         formatInfo.innerText = file.name.split('.').pop().toUpperCase();
         formatInfo.style.opacity = "1";
         
@@ -394,5 +393,16 @@
         }, 1500);
     }
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker Registered'))
+            .catch(err => console.log('Service Worker Registration failed', err));
+    });
+}
+</script>
+
 </body>
 </html>
