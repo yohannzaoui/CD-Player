@@ -1,77 +1,79 @@
 ---
 
-# Technics SL-PS740A Digital Audio Player - Technical Documentation
+# Technics SL-PS740A Digital Audio Player - Documentation
 
-This project is a high-fidelity web-based reproduction of the **Technics SL-PS740A** CD Player interface. It is designed as a Progressive Web App (PWA) with a focus on visual accuracy and vintage audio aesthetics.
+## ⚙️ Core Specifications
 
-## 🛠 Features & Capabilities
-
-### 1. High-Fidelity Display (VFD Style)
-
-* **Stable Digit System:** Uses a custom "slotting" system (individual `<span>` per digit) to ensure the time display remains perfectly still, even when the number "1" is displayed.
-* **Technics Branding:** Integrated **70px** high-resolution logo with a realistic relief/shadow effect.
-* **Integrated VU Meter:** Dual-channel (L/R) frequency visualizer based on the Web Audio API, styled after vintage vacuum fluorescent displays.
-* **Status Indicators:** Real-time feedback for `PLAY`, `PAUSE`, `STOP`, and search modes.
-
-### 2. Audio Control Engine
-
-* **MASH 1-BIT DAC Simulation:** A visual nod to Technics' proprietary technology.
-* **Jog Shuttle:** Functional slider for variable-speed track searching.
-* **A-B Repeat:** Set specific loop points within a track.
-* **Playback Modes:** Support for **Shuffle** (simplified display) and **Repeat** (1 / All).
-* **Advanced Tools:** Includes `Auto Cue` and `Peak Search` visual simulations.
-
-### 3. Modern Connectivity
-
-* **Media Session API:** Seamless integration with OS-level media controls (Lock screen, Keyboard media keys, Chrome media hub).
-* **PWA Ready:** Includes manifest and meta tags for "Add to Home Screen" installation on iOS and Android.
-* **Responsive Dark Mode:** Strictly enforced dark theme with high-contrast VFD green (`#24ff8a`) and red (`#ff3333`) accents.
+* **Brand:** Technics
+* **Model:** SL-PS740A
+* **Technology:** MASH 1-BIT DAC Simulation
+* **Visual Style:** Vintage VFD (Vacuum Fluorescent Display)
+* **Language:** English Only
+* **Theme:** Dark Mode Only
 
 ---
 
-## 🏗 Code Structure Overview
+## 🚀 Key Features
 
-### CSS Variables
+### 1. Advanced Time Display
 
-The interface relies on a central color palette for easy maintenance:
+* **Anti-Jumping Logic:** Implementation of a "Slot-Based" grid where each digit is contained in a fixed-width `<span>`. This prevents the UI from shifting when the digit "1" appears.
+* **Dual Mode:** Toggle between "Elapsed Time" and "Remaining Time".
+* **Visual Polish:** High-glow green text with a 15px radial blur for a realistic phosphor effect.
 
+### 2. Brand Identity
+
+* **Logo:** High-definition `Technics_logo.png` set to exactly **70px** height.
+* **Relief Effect:** Custom CSS filters applied to the logo for a 3D metallic look:
 ```css
-:root {
-    --bg-color: #080808;
-    --panel-color: #141414;
-    --vfd-green: #24ff8a;
-    --vfd-red: #ff3333;
-}
+filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.8)) drop-shadow(0px 1px 0px rgba(255,255,255,0.1));
 
 ```
 
-### Key Logic Modules
 
-* **Audio Context:** Initializes the `AnalyserNode` for the VU meter upon the first user interaction.
-* **Time Formatting:** Calculates elapsed/remaining time and maps characters to the stable grid.
-* **Playlist Management:** Handles multiple file uploads and maintains the active track state.
 
----
+### 3. Integrated Audio Tools
 
-## 📂 File Requirements
-
-To ensure the application works correctly, the following directory structure is expected:
-
-* `index.html` (The core application)
-* `manifest.json` (PWA configuration)
-* `img/`
-* `Technics_logo.png` (70px height recommended)
-* `favicon_512.png` (For PWA and Media Session artwork)
+* **VU Meter:** Dual-channel (L/R) canvas-based visualizer with peak-hold simulation (Red/Orange/Green segments).
+* **Jog Shuttle:** A functional range slider for manual track scrubbing with dynamic status feedback (`SEARCH >>`).
+* **Indicators:** * `SHUFFLE`: Displays only the word "SHUFFLE" when active.
+* `REPEAT`: Cycles through "Repeat 1" and "Repeat All".
+* `A-B`: Visual indicator for loop points.
 
 
 
 ---
 
-## 📝 Recent Modifications (2026-01-12)
+## 📂 Project Structure
 
-* **Logo Size:** Increased to **70px** for better brand visibility.
-* **Button UI:** Removed vertical bars from `<<` and `>>` navigation buttons.
-* **Timer Stability:** Implemented the character-width fix to prevent text "jumping".
-* **Shuffle Logic:** Simplified the indicator text to "SHUFFLE" instead of "SHUFFLE ON".
+```text
+/Project-Root
+│
+├── index.html           # Core application & logic
+├── manifest.json        # PWA configuration
+└── img/
+    ├── Technics_logo.png # Logo (70px height)
+    └── favicon_512.png   # App icon & Media Artwork
+
+```
+
+---
+
+## 🛠 Recent Fixes (2026-01-12)
+
+| Feature | Update Description |
+| --- | --- |
+| **Logo** | Resized to **70px** for better visual balance. |
+| **Navigation** | Removed vertical bars from `<<` and `>>` buttons. |
+| **Stability** | Separated timer digits into individual containers to stop text movement. |
+| **Shuffle** | Changed indicator label from "SHUFFLE ON" to just "**SHUFFLE**". |
+| **YAML Fix** | Applied proper block quoting in documentation to prevent parsing errors. |
+
+---
+
+## 📱 Mobile & PWA Optimization
+
+* **Meta Tags:** Full support for `apple-mobile-web-app-capable` to hide the Safari URL bar.
+* **Media Session API:** Allows track control and metadata display on the phone's lock screen and Bluetooth devices.
 
 ---
