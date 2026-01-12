@@ -67,5 +67,56 @@
 
 * **Meta Tags**: Full support for `apple-mobile-web-app-capable` to hide the Safari URL bar.
 * **Media Session API**: Allows track control and metadata display on the phone's lock screen and Bluetooth devices.
+---
+
+## 📖 User Guide
+
+### 1. Track Navigation & Playback
+
+* **Play/Pause**: Starts or pauses the current track. The status line will toggle between `PLAY` and `PAUSE`.
+* **Next/Previous (`>>` / `<<`)**: Skips to the next or previous track in the playlist. The active track number will glow red in the track grid.
+* **Stop**: Stops playback and resets the timer to `00:00`. It also clears any active **A-B Repeat** points.
+
+### 2. Jog Shuttle (Search Mode)
+
+The **Jog Shuttle** at the bottom allows for precision scrubbing within a track:
+
+* **Forward Search**: Move the slider to the right to fast-forward. The status will display `SEARCH >>`.
+* **Backward Search**: Move the slider to the left to rewind. The status will display `<< SEARCH`.
+* **Variable Speed**: The further you move the slider, the faster the search becomes. Releasing the slider (or letting it snap back to center) resumes normal playback.
+
+### 3. A-B Repeat Function
+
+This allows you to loop a specific section of a song:
+
+1. While a track is playing, press **A-B** once to set the start point (**Point A**). The `A-B Repeat` indicator will light up.
+2. Press **A-B** a second time to set the end point (**Point B**). The player will now loop continuously between these two points.
+3. Press **A-B** a third time to clear the loop and return to normal playback.
+
+### 4. Advanced Display Features
+
+* **Time Toggle**: Press the **Time** button to switch between:
+* `Elapsed Time`: Time passed since the start of the track.
+* `Remaining Time`: Countdown until the end of the track.
+
+
+* **VU Mode**: Press **VU** to toggle the visibility of the fluorescent level meters if you prefer a minimal interface.
+* **Peak Search**: Simulates the hardware's ability to find the loudest part of a disc (useful for setting recording levels).
+
+### 5. Playback Modes
+
+* **Shuffle**: Randomizes the play order. The indicator will show **SHUFFLE**.
+* **Repeat**:
+* `Repeat 1`: Loops the current track indefinitely.
+* `Repeat All`: Loops the entire playlist.
+
+
 
 ---
+
+## 💾 Saving Preferences
+
+The application is designed to remember your settings. Your **Language** (English) and **Theme** (Dark Mode) are automatically saved in your browser's local storage so that the player is ready the moment you reopen it.
+
+---
+
