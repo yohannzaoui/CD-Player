@@ -61,6 +61,13 @@
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
         .modal-content { background: #000; border: 2px solid var(--btn-border); width: 300px; height: 300px; }
         .modal-content img { width: 100%; height: 100%; object-fit: contain; }
+
+	.large-stop {
+    /* Ajustez la taille selon vos besoins */
+    font-size: 15px; 
+    display: inline-block;
+    line-height: 1;
+  }
     </style>
 </head>
 <body>
@@ -95,7 +102,7 @@
     </div>
 
     <div class="controls-grid">
-        <button onclick="handlePlay()">Play</button><button onclick="handlePause()">Pause</button><button onclick="prevTrack()">Prev</button><button onclick="nextTrack()">Next</button><button onclick="handleStop()">Stop</button><button onclick="toggleTime()">Time</button>
+        <button onclick="handlePlay()">&#9654;</button><button onclick="handlePause()">&#10074;&#10074;</button><button onclick="prevTrack()">&#9664;&#9664;</button><button onclick="nextTrack()">&#9654;&#9654;</button><button onclick="handleStop()"><span class="large-stop">&#9632;</span></button><button onclick="toggleTime()">Time</button>
     </div>
     <div class="controls-grid-4">
         <button onclick="runAutoCue()">Auto Cue</button><button onclick="runPeak()">Peak</button><button onclick="skip(-10)">-10s</button><button onclick="skip(10)">+10s</button>
