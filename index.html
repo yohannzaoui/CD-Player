@@ -18,6 +18,14 @@
         </div>
     </div>
 
+    <div id="playlist-modal" onclick="this.style.display='none'">
+        <div class="modal-content list-content" onclick="event.stopPropagation()">
+            <h3 style="color:var(--vfd-blue); margin-top:0; letter-spacing:2px;">COMPACT DISC TRACK LIST</h3>
+            <div id="track-list-container"></div>
+            <button class="btn" style="margin-top:20px; height:35px; width:100px; margin-left:auto; margin-right:auto;" onclick="document.getElementById('playlist-modal').style.display='none'">CLOSE</button>
+        </div>
+    </div>
+
     <div class="deck-container">
         <img src="img/compact_disc.png" class="cd-logo-bottom" alt="Compact Disc Digital Audio">
 
@@ -69,7 +77,7 @@
                         </div>
                     </div>
 
-                    <div class="track-grid">
+                    <div class="track-grid" onclick="openPlaylist()" style="cursor:pointer">
                         <div id="grid-numbers-wrapper" style="display: flex; gap: 10px; align-items: center;"></div>
                         <div id="over-arrow" class="arrow-indicator">▶</div>
                     </div>
@@ -115,7 +123,7 @@
                     <button class="btn" id="repeat-btn">Repeat</button>
                     <button class="btn" id="ab-btn">A-B</button>
                     <button class="btn" id="peak-btn">Peak</button>
-                    <button class="btn" id="time-btn">Time</button>
+                    <button class="btn" id="time-btn">Time Mode</button>
                     <button class="btn" id="vu-btn">VU</button>
                 </div>
                 

@@ -123,6 +123,7 @@ body {
     background: linear-gradient(145deg, #2a2a2b, #151516); border: 1px solid #111; 
     color: var(--text-silver); cursor: pointer; font-size: 11px; font-weight: bold; 
     box-shadow: 3px 3px 6px #000; text-transform: uppercase; height: 50px; width: 100%;
+    padding: 0 5px; text-align: center;
     display: flex; align-items: center; justify-content: center;
 }
 .btn:active { background: linear-gradient(145deg, #151516, #2a2a2b); box-shadow: inset 2px 2px 5px #000; color: var(--text-white); }
@@ -141,8 +142,9 @@ body {
 .jog-knob { width: 130px; height: 130px; transform: rotate(0deg); }
 .cd-logo-bottom { position: absolute; left: 50px; bottom: 40px; height: 50px; opacity: 0.7; pointer-events: none; }
 
-#art-modal {
-    display: none; position: fixed; z-index: 9999; 
+/* Modals */
+#art-modal, #playlist-modal {
+    display: none; position: fixed; z-index: 10000; 
     left: 0; top: 0; width: 100%; height: 100%; 
     background-color: rgba(0,0,0,0.95); justify-content: center; align-items: center; 
     backdrop-filter: blur(15px);
@@ -151,9 +153,19 @@ body {
     background: #111; border: 2px solid #333; padding: 30px;
     box-shadow: 0 0 100px rgba(0,0,0,1); text-align: center; border-radius: 8px;
 }
+.list-content { max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
+#track-list-container { text-align: left; margin-top: 15px; border-top: 1px solid #222; }
+.track-item { 
+    padding: 12px; border-bottom: 1px solid #222; cursor: pointer; color: var(--text-silver);
+    font-size: 14px; transition: all 0.2s; font-family: var(--ui-font);
+}
+.track-item:hover { background: #1a1a1b; color: var(--vfd-blue); }
+.track-item.active { color: var(--vfd-red); font-weight: bold; background: #080808; }
+
 #art-image { max-width: 600px; max-height: 600px; width: 100%; border-radius: 4px; }
 #art-info { color: var(--vfd-blue); margin-top: 25px; font-weight: bold; text-transform: uppercase; font-size: 16px; }
 
+/* Grille et Indicateurs */
 .track-grid { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 20px 0; padding: 12px 0; border-top: 1px solid #0a0a0a; border-bottom: 1px solid #0a0a0a; }
 .grid-num { font-size: 14px; font-weight: bold; color: #0d0d0d; min-width: 18px; text-align: center; }
 .grid-num.loaded { color: #40e0ff; }
@@ -165,7 +177,7 @@ body {
 .vfd-indicator { font-family: var(--ui-font); font-size: 10px; font-weight: bold; color: #08181a; text-transform: uppercase; }
 .vfd-indicator.active { color: var(--vfd-blue); text-shadow: 0 0 8px var(--vfd-blue); }
 
-/* Animations de clignotement */
+/* Animations */
 @keyframes vfd-input-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
 .vfd-input-blink { animation: vfd-input-blink 1s infinite; }
 .vfd-blink-pause { animation: vfd-input-blink 1s infinite; }

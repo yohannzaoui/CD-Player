@@ -196,9 +196,7 @@ function updateTimeDisplay() {
 }
 
 function updateGrid() {
-    // Condition : Playlist STRICTEMENT supérieure à 20 pour afficher la flèche rouge
     document.getElementById('over-arrow').classList.toggle('active', playlist.length > 20);
-    
     for(let i=1; i<=20; i++) {
         const el = document.getElementById(`gn-${i}`);
         el.classList.toggle('loaded', i <= playlist.length);
@@ -259,6 +257,25 @@ function extractMetadata(file) {
             } else currentArt = "img/favicon.png";
         }
     });
+}
+
+function openPlaylist() {
+    if (playlist.length === 0) return;
+    const container = document.getElementById('track-list-container');
+    container.innerHTML = "";
+    
+    playlist.forEach((file, idx) => {
+        const item = document.createElement('div');
+        item.className = 'track-item' + (idx === currentIndex ? ' active' : '');
+        item.innerText = `${(idx + 1).toString().padStart(2, '0')}. ${file.name}`;
+        item.onclick = () => {
+            loadTrack(idx);
+            document.getElementById('playlist-modal').style.display = 'none';
+        };
+        container.appendChild(item);
+    });
+    
+    document.getElementById('playlist-modal').style.display = 'flex';
 }
 
 document.getElementById('file-input').onchange = (e) => { 
