@@ -4,26 +4,26 @@
 
 This digital interface is a high-fidelity recreation of the legendary **Technics SL-PS740A** Compact Disc player. It features a professional-grade Virtual Fluorescent Display (VFD), high-precision VU meters, and advanced track management.
 
-## 🎛️ Key Features
+## Key Features
 
-### 1. Professional Transport & Mechanism
+### 1. Professional Transport and Mechanism
 
 * **POWER**: Resets the player, clears the current playlist, and opens the disc tray.
-* **OPEN/CLOSE (⏏)**: Toggles the CD tray mechanism.
-* **PLAY/PAUSE (▶/||)**: Starts or pauses playback. The time display flashes when paused.
-* **STOP (■)**: Stops playback and resets the current track to the beginning.
-* **SEARCH (◀◀ / ▶▶)**: Hold these buttons to scan through a track with audio muted.
+* **OPEN-CLOSE**: Toggles the CD tray mechanism.
+* **PLAY-PAUSE**: Starts or pauses playback. The time display flashes when paused.
+* **STOP**: Stops playback and resets the current track to the beginning.
+* **SEARCH**: Hold the rewind or fast-forward buttons to scan through a track with audio muted.
 
 ### 2. Advanced Audio Controls
 
-* **VOLUME KNOB/BUTTONS**:
+* **VOLUME BUTTONS**:
 * **Auto-Repeat**: Hold **VOL+** or **VOL-** to adjust the volume continuously.
-* **Precision**: Adjusts in 1% increments (0 to 99).
+* **Precision**: Adjusts in 1% increments (from 0 to 99).
 * **Persistent Mute**: Press **MUTE** to silence audio. The volume level is remembered and restored when unmuted.
 
 
 * **PEAK SEARCH**: Scans the entire track to find the highest decibel level. The VFD displays "PEAK SEARCH" and the VU meters lock onto the highest value found.
-* **VU METERS**: Real-time Left/Right frequency analyzers. Can be toggled ON/OFF using the **VU** button.
+* **VU METERS**: Real-time Left and Right frequency analyzers. Can be toggled ON or OFF using the **VU** button.
 
 ### 3. Playback Modes
 
@@ -37,42 +37,39 @@ This digital interface is a high-fidelity recreation of the legendary **Technics
 1. Press **A-B** once to set the start point (A).
 2. Press **A-B** again to set the end point (B).
 3. The player will loop infinitely between these two points.
-4. Press a third time to clear.
+4. Press a third time to clear the loop.
 
 
 
-### 4. VFD Display & Navigation
+### 4. VFD Display and Navigation
 
 * **TIME MODE**: Toggles between **Elapsed Time** (Min:Sec) and **Remaining Time** (-Min:Sec).
-* **NUMERIC KEYPAD**: Direct track access. Type a number (e.g., "05") to jump instantly to that track.
+* **NUMERIC KEYPAD**: Direct track access. Type a number (for example, "05") to jump instantly to that track.
 * **TRACK GRID**: Displays a 1-20 grid of tracks.
 * **Blue**: Track is loaded.
 * **Red**: Current active track.
 
 
-* **ALBUM ART**: Click the **"TRACK"** label on the VFD to view the embedded album art and full metadata (Artist/Album/Title).
+* **ALBUM ART**: Click the **TRACK** label on the VFD to view the embedded album art and full metadata (Artist, Album, and Title).
 
 ---
 
-## 🚀 How to Use
+## How to Use
 
 ### Loading Music
 
-1. Click the **POWER** button or the **OPEN/CLOSE** button to ensure the tray is ready.
-2. Click the center of the tray (labeled **● INSERT COMPACT DISC ●**).
-3. Select one or multiple audio files (MP3, WAV, FLAC) from your computer.
+1. Click the **POWER** button or the **OPEN-CLOSE** button to ensure the tray is ready.
+2. Click the center of the tray (labeled **INSERT COMPACT DISC**).
+3. Select one or multiple audio files (MP3, WAV, or FLAC) from your computer.
 4. The player will automatically close the tray and begin reading the first track.
 
 ### Managing the Playlist
 
 * **Quick Jump**: Use the **Numeric Grid** to type the track number.
-* **Visual List**: Click the **Track Grid** (the numbers 1-20) to open a full scrollable list of all loaded songs. Click any song in the list to play it.
+* **Visual List**: Click the **Track Grid** (the numbers 1 to 20) to open a full scrollable list of all loaded songs. Click any song in the list to play it.
 
-### Volume & Muting
+### Preferences
 
-* The volume level is displayed on the VFD temporarily when you hover over or click the volume controls.
-* If you close your browser, your **Language (English)** and **Dark Mode** preferences are automatically saved for your next session.
+* Your **Language (English)** and **Theme (Dark Mode)** preferences are automatically saved in your browser. They will remain the same when you close and reopen the application.
 
 ---
-
-> **Technical Note**: This application uses the Web Audio API for real-time visualization and `jsmediatags` for metadata extraction. For the best experience, use a modern browser (Chrome, Edge, or Firefox).
