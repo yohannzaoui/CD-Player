@@ -24,7 +24,7 @@ body {
 
 .deck-container {
     width: 1200px; background-color: var(--deck-gray);
-    padding: 20px 50px 40px 50px; border-top: 1px solid #333;
+    padding: 10px 50px 40px 50px; border-top: 1px solid #333;
     border-radius: 4px; box-shadow: 0 80px 150px rgba(0,0,0,1);
     position: relative;
     z-index: 1;
@@ -35,21 +35,23 @@ body {
     margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #222;
 }
 
-.main-logo { height: 90px; display: block; opacity: 0.9; }
+.main-logo { height: 20px; display: block; opacity: 0.9; }
 .model-name { font-size: 12px; color: var(--text-silver); letter-spacing: 3px; font-weight: bold; text-transform: uppercase; }
 
 .tray-outer-slot {
-    width: 100%; height: 75px; background: #000;
-    margin-bottom: 35px; position: relative; overflow: hidden; border: 1px solid #111;
+    width: 100%; height: 75px; background: #1a1a1b;
+    margin-bottom: 35px; position: relative; overflow: hidden; border: 1px solid #1a1a1b;
 }
 
+
 .tray-mechanism {
-    position: absolute; width: 100%; height: 100%;
+    position: absolute; width: 80%; height: 100%;
     background: linear-gradient(180deg, #1a1a1b 0%, #151516 100%);
-    top: 0; left: 0; z-index: 10;
+    top: 0; left: 10%; z-index: 10;
     transition: transform 1.1s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex; justify-content: center; align-items: center;
     border-bottom: 2px solid #000;
+    border: #000 3px solid; box-shadow: 0px 2px 5px rgba(0,0,0,0.8);
 }
 .tray-mechanism.open { transform: translateY(70px); }
 .mash-logo-tray { height: 35px; opacity: 0.5; filter: grayscale(1) brightness(0.8); }
