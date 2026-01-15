@@ -72,8 +72,8 @@ function startVolRepeat(dir) {
         else audio.volume = Math.max(0, audio.volume - (1/99));
         showVolumeDisplay();
     };
-    adjust(); // Premier clic immédiat
-    volRepeatInterval = setInterval(adjust, 100); // Répétition toutes les 100ms
+    adjust();
+    volRepeatInterval = setInterval(adjust, 100);
 }
 
 function stopVolRepeat() {
