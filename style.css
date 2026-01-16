@@ -125,7 +125,7 @@ body {
     font-size: 11px; color: var(--vfd-blue); font-family: var(--ui-font); 
     font-weight: bold; text-transform: uppercase; margin-bottom: 4px; letter-spacing: 2px;
 }
-.label-vfd.clickable { cursor: pointer; color: var(--vfd-blue); transition: color 0.2s; }
+.label-vfd.clickable { color: var(--vfd-blue); transition: color 0.2s; }
 
 .vu-meters { margin-top: 15px; padding-top: 10px; border-top: 1px solid #0a0a0a; }
 .vu-row { display: flex; align-items: center; gap: 15px; margin-bottom: 8px; }
@@ -274,4 +274,28 @@ body {
 .volume-label {
     display: block; /* S'assure que l'élément peut être déplacé */
     transform: translateY(15px); /* Descend le mot de 15px vers le bas */
+}
+
+
+
+/*.bass-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px; /* Espace avec le bloc du dessus */
+}
+
+/*.bass-controls-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* On réutilise les dimensions que tu as aimées pour le volume */
+/*#bass-down-btn, #bass-up-btn {
+    width: 60px !important;
+    height: 35px !important;
+    min-width: 0 !important;
+    flex: none !important;
 }
