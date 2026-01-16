@@ -69,7 +69,7 @@ body {
 .tray-mechanism.open {
     transform: translateY(70px); /* Ajuste à 68px si tu veux voir le haut du tiroir */
 }
-.mash-logo-tray { height: 35px; opacity: 0.5; filter: grayscale(1) brightness(1,5); }
+.mash-logo-tray { height: 35px; opacity:2; filter: grayscale(1) brightness(1,5); }
 
 .power-section, .eject-section {
     display: flex; flex-direction: column; align-items: center; gap: 10px;
