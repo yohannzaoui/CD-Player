@@ -175,12 +175,12 @@ body {
     box-shadow: 0 0 100px rgba(0,0,0,1); text-align: center; border-radius: 8px;
 }
 .list-content { max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
-#track-list-container { text-align: left; margin-top: 15px; border-top: 1px solid #222; }
+#track-list-container { text-align: left; margin-top: 15px; border-top: 1px solid #d8d8d8; }
 .track-item { 
-    padding: 12px; border-bottom: 1px solid #222; cursor: pointer; color: var(--text-silver);
+    padding: 12px; border-bottom: 1px solid #b6b6b6; cursor: pointer; color:#d6d6d6; ;
     font-size: 14px; transition: all 0.2s; font-family: var(--ui-font);
 }
-.track-item:hover { background: #1a1a1b; color: var(--vfd-blue); }
+.track-item:hover { background: #111111; color: var(--vfd-blue); }
 .track-item.active { color: var(--vfd-red); font-weight: bold; background: #080808; }
 
 #art-image { max-width: 600px; max-height: 600px; width: 100%; border-radius: 4px; }
