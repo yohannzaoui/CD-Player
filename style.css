@@ -32,7 +32,7 @@ body {
 
 .brand-header {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 25px; padding-bottom: 12px; border-bottom: 1px solid #222;
+    margin-bottom: 25px; padding-bottom: 12px; border-bottom: 0px solid #222;
 }
 
 .main-logo { height: 20px; display: block; margin-left: -70px}
@@ -275,6 +275,3 @@ body {
     display: block; /* S'assure que l'élément peut être déplacé */
     transform: translateY(15px); /* Descend le mot de 15px vers le bas */
 }
-
-
-
