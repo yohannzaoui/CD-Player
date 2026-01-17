@@ -9,6 +9,7 @@ let audioCtx, analyzer, dataArray, searchInterval = null;
 let preMuteVolume = 0.02;
 let isMuted = false;
 let volRepeatInterval = null;
+let vuMultiplier = 1.2; 
 
 const gridWrapper = document.getElementById('grid-numbers-wrapper');
 for(let i=1; i<=20; i++) {
@@ -232,7 +233,7 @@ function updateDig(prefix, val) {
 
 function updateTimeDisplay() {
     const timeLabel = document.getElementById('time-label');
-    if(timeLabel.innerText === "VOLUME" || timeLabel.innerText === "MUTE" || isPeakSearching) return; 
+    if(timeLabel.innerText === "VOLUME" || timeLabel.innerText === "MUTE" || timeLabel.innerText === "VU SENSE" || isPeakSearching) return; 
     let d = timeMode === 0 ? audio.currentTime : (audio.duration || 0) - audio.currentTime;
     const mins = Math.floor(d / 60).toString().padStart(2, '0'), secs = Math.floor(d % 60).toString().padStart(2, '0');
     document.getElementById('m-d1').innerText = mins[mins.length-2] || "0";
@@ -242,11 +243,21 @@ function updateTimeDisplay() {
 }
 
 function updateGrid() {
-    document.getElementById('over-arrow').classList.toggle('active', playlist.length > 20);
+    // On vérifie si la playlist dépasse 20
+    const hasOver20 = playlist.length > 20;
+    const overArrow = document.getElementById('over-arrow');
+    
+    if (overArrow) {
+        overArrow.classList.toggle('active', hasOver20);
+    }
+
+    // Mise à jour des petits numéros (1-20)
     for(let i=1; i<=20; i++) {
         const el = document.getElementById(`gn-${i}`);
-        el.classList.toggle('loaded', i <= playlist.length);
-        el.classList.toggle('active-track', i === currentIndex + 1 && playlist.length > 0);
+        if (el) {
+            el.classList.toggle('loaded', i <= playlist.length);
+            el.classList.toggle('active-track', i === currentIndex + 1 && playlist.length > 0);
+        }
     }
 }
 
@@ -271,7 +282,13 @@ function loadTrack(idx) {
         idx = Math.floor(Math.random() * playlist.length);
     }
     currentIndex = (idx + playlist.length) % playlist.length;
+    const currentFile = playlist[currentIndex];
     audio.src = URL.createObjectURL(playlist[currentIndex]);
+    const formatDisplay = document.getElementById('file-format-display');
+    if (formatDisplay && currentFile.name) {
+        // split('.') coupe le nom au point, pop() prend le dernier morceau (l'extension)
+        formatDisplay.innerText = currentFile.name.split('.').pop().toUpperCase();
+    }
     updateDig('t', currentIndex + 1);
     updateGrid(); 
     audio.play();
@@ -353,7 +370,11 @@ function openPlaylist() {
 
 document.getElementById('file-input').onchange = (e) => { 
     playlist = Array.from(e.target.files); 
-    if(playlist.length) { document.getElementById('tray-front').classList.remove('open'); loadTrack(0); }
+    if(playlist.length) { 
+        document.getElementById('tray-front').classList.remove('open'); 
+        loadTrack(0); 
+        updateGrid(); // <--- AJOUTE CETTE LIGNE ICI
+    }
 };
 
 document.getElementById('next-btn').onclick = () => loadTrack(currentIndex + 1);
@@ -396,10 +417,19 @@ function renderVU() {
     requestAnimationFrame(renderVU);
     if (!analyzer || !isVUOn || isPeakSearching) return;
     analyzer.getByteFrequencyData(dataArray);
+
     ['meter-L', 'meter-R'].forEach((id, idx) => {
         const el = document.getElementById(id);
-        const val = Math.floor((dataArray[idx + 2] / 255) * 40);
-        for (let i = 0; i < 40; i++) el.children[i].className = 'meter-segment' + (i < val ? (i > 34 ? ' on-red' : ' on-blue') : '');
+        
+        // --- MODIFICATION ICI ---
+        // On multiplie la donnée brute par vuMultiplier avant de calculer le nombre de segments
+        let rawVal = dataArray[idx + 2] * vuMultiplier; 
+        const val = Math.floor((rawVal / 255) * 40);
+        // -------------------------
+
+        for (let i = 0; i < 40; i++) {
+            el.children[i].className = 'meter-segment' + (i < val ? (i > 34 ? ' on-red' : ' on-blue') : '');
+        }
     });
 }
 
@@ -417,3 +447,39 @@ if ('serviceWorker' in navigator) {
             .catch(err => console.log('Service Worker Error', err));
     });
 }
+
+
+f// Affiche la sensibilité au survol
+function showVUSense() {
+    if (volDisplayTimeout) clearTimeout(volDisplayTimeout);
+    
+    const timeLabel = document.getElementById('time-label');
+    const timeSep = document.getElementById('time-sep');
+    
+    timeLabel.innerText = "VU SENSE";
+    timeSep.style.opacity = "0";
+
+    // On prépare la valeur (ex: 1.2 -> 12)
+    let displayVal = Math.round(vuMultiplier * 10).toString().padStart(2, '0');
+    
+    document.getElementById('m-d1').innerText = " ";
+    document.getElementById('m-d2').innerText = " ";
+    document.getElementById('s-d1').innerText = displayVal[0];
+    document.getElementById('s-d2').innerText = displayVal[1];
+}
+
+// Modifie la valeur quand on clique (et met à jour l'affichage)
+function adjustVUSense(change) {
+    vuMultiplier += change;
+    if (vuMultiplier < 0.2) vuMultiplier = 0.2;
+    if (vuMultiplier > 8.0) vuMultiplier = 8.0;
+    
+    showVUSense(); // Met à jour les chiffres immédiatement
+}
+
+// Lance le délai de 1.5s quand la souris quitte le bouton
+function startVUTimeout() {
+    if (volDisplayTimeout) clearTimeout(volDisplayTimeout);
+    volDisplayTimeout = setTimeout(hideVolumeDisplay, 1500);
+}
+
