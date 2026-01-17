@@ -639,3 +639,37 @@ body {
     color: #ff0000 !important; /* Rouge vif */
     text-shadow: 0 0 8px rgba(255, 0, 0, 0.8); /* Effet néon/VFD */
 }
+
+
+/* --- REFLET VERTICAL HAUT EN BAS --- */
+
+.display-panel {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.display-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Dégradé de 180deg pour aller de haut en bas */
+    /* On crée une bande claire en haut qui s'estompe rapidement */
+    background: linear-gradient(
+        180deg, 
+        rgba(255, 255, 255, 0.15) 0%,   /* Éclat maximal au bord supérieur */
+        rgba(255, 255, 255, 0.05) 15%,  /* Dégradé rapide */
+        transparent 50%,                /* Zone sombre au milieu pour la lisibilité */
+        rgba(255, 255, 255, 0.02) 80%,  /* Très léger reflet de surface en bas */
+        rgba(255, 255, 255, 0.07) 100%  /* Petit liseré de lumière sur le bord bas */
+    );
+    
+    z-index: 999; 
+    pointer-events: none;
+    
+    /* Ajout d'une légère brillance sur toute la surface pour l'effet "vitre" */
+    background-color: rgba(255, 255, 255, 0.01);
+}
