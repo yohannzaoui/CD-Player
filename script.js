@@ -203,6 +203,11 @@ document.getElementById('ab-btn').onclick = () => {
     renderABLoop(); // met à jour la barre
 };
 
+function isABActive() {
+    return pointA !== null;
+}
+
+
 document.getElementById('power-reset-btn').onclick = () => {
     audio.pause(); audio.src = ""; audio.volume = 0.02;
     playlist = []; currentIndex = 0; pointA = null; pointB = null; isMuted = false;
@@ -315,6 +320,7 @@ if ('mediaSession' in navigator) {
 }
 
 audio.onended = () => {
+    if (isABActive()) return;
     if (repeatMode === 1) audio.play();
     else if (isRandom || repeatMode === 2 || currentIndex < playlist.length - 1) loadTrack(currentIndex + 1);
 };
@@ -337,7 +343,14 @@ function handleNumKey(num) {
 function executeJump() {
     document.getElementById('t-d1').parentElement.classList.remove('vfd-input-blink');
     let trackNum = parseInt(inputBuffer);
-    if (!isNaN(trackNum) && trackNum > 0 && trackNum <= playlist.length) loadTrack(trackNum - 1);
+    if (isABActive()) {
+    updateDig('t', currentIndex + 1);
+    inputBuffer = "";
+    return;
+}
+
+if (!isNaN(trackNum) && trackNum > 0 && trackNum <= playlist.length)
+    loadTrack(trackNum - 1);
     else updateDig('t', currentIndex + 1);
     inputBuffer = "";
 }
@@ -385,8 +398,14 @@ document.getElementById('file-input').onchange = (e) => {
     }
 };
 
-document.getElementById('next-btn').onclick = () => loadTrack(currentIndex + 1);
-document.getElementById('prev-btn').onclick = () => loadTrack(currentIndex - 1);
+document.getElementById('next-btn').onclick = () => {
+    if (isABActive()) return;
+    loadTrack(currentIndex + 1);
+};
+document.getElementById('prev-btn').onclick = () => {
+    if (isABActive()) return;
+    loadTrack(currentIndex - 1);
+};
 document.getElementById('eject-btn').onclick = () => document.getElementById('tray-front').classList.toggle('open');
 document.getElementById('random-btn').onclick = () => { 
     isRandom = !isRandom; 
