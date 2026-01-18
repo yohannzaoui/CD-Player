@@ -72,12 +72,17 @@ function startVolRepeat(dir) {
     stopVolRepeat();
     isMuted = false;
     const adjust = () => {
-        if (dir === 1) audio.volume = Math.min(1, audio.volume + (1/99));
-        else audio.volume = Math.max(0, audio.volume - (1/99));
+        // AU LIEU DE : audio.volume + (1/99)
+        // ON UTILISE : 0.01 (qui correspond exactement à 1 unité sur 100)
+        if (dir === 1) {
+            audio.volume = Math.min(1, audio.volume + 0.01);
+        } else {
+            audio.volume = Math.max(0, audio.volume - 0.01);
+        }
         showVolumeDisplay();
     };
     adjust();
-    volRepeatInterval = setInterval(adjust, 100);
+    volRepeatInterval = setInterval(adjust, 100); // 100ms = vitesse de répétition
 }
 
 function stopVolRepeat() {
