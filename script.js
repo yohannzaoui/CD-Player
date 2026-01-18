@@ -301,22 +301,38 @@ function updateMediaSession() {
 
 function loadTrack(idx) {
     if (!playlist.length) return;
+    
+    // On mémorise si la musique jouait avant le changement
+    const wasPlaying = !audio.paused;
+
     if (isRandom && idx !== currentIndex) {
         idx = Math.floor(Math.random() * playlist.length);
     }
+    
     currentIndex = (idx + playlist.length) % playlist.length;
     const currentFile = playlist[currentIndex];
-    audio.src = URL.createObjectURL(playlist[currentIndex]);
+    audio.src = URL.createObjectURL(currentFile);
+    
     const formatDisplay = document.getElementById('file-format-display');
     if (formatDisplay && currentFile.name) {
-        // split('.') coupe le nom au point, pop() prend le dernier morceau (l'extension)
         formatDisplay.innerText = currentFile.name.split('.').pop().toUpperCase();
     }
+    
     updateDig('t', currentIndex + 1);
     updateGrid(); 
-    audio.play();
-    updateMediaSession(); // Sync with Browser Controls
-    document.getElementById('main-time-display').classList.remove('vfd-blink-pause'); 
+    
+    // --- CONDITION DE LECTURE ---
+    // On ne lance play() QUE si la musique jouait déjà
+    if (wasPlaying) {
+        audio.play();
+        document.getElementById('main-time-display').classList.remove('vfd-blink-pause'); 
+    } else {
+        // Si on était sur STOP, on s'assure que le temps est à 00:00
+        audio.currentTime = 0;
+        updateTimeDisplay();
+    }
+    
+    updateMediaSession();
     setupAudio(); 
     extractMetadata(playlist[currentIndex]);
 }
