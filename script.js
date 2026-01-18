@@ -589,19 +589,27 @@ function toggleVUHatch() {
 
 
 function adjustBass(change) {
-    // On limite entre -10 et +10 dB
+    // On s'assure que le changement est bien de 1 ou -1
+    // On limite strictement entre -10 et +10 dB
     bassLevel = Math.max(-10, Math.min(10, bassLevel + change));
+    
     if (bassFilter) {
+        // setTargetAtTime permet une transition douce pour l'oreille
         bassFilter.gain.setTargetAtTime(bassLevel, audioCtx.currentTime, 0.01);
     }
+    
+    // On affiche immédiatement le nouveau palier
     showToneDisplay("BASS", bassLevel);
 }
 
 function adjustTreble(change) {
+    // Même logique pour les aigus
     trebleLevel = Math.max(-10, Math.min(10, trebleLevel + change));
+    
     if (trebleFilter) {
         trebleFilter.gain.setTargetAtTime(trebleLevel, audioCtx.currentTime, 0.01);
     }
+    
     showToneDisplay("TREBLE", trebleLevel);
 }
 
