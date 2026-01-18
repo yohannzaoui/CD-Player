@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Technics Stereo Compact Disc Player SL-PS740A</title>
+    <title>Technics High Resolution Audio Player</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
@@ -15,7 +15,7 @@
     <div id="art-modal" onclick="this.style.display='none'">
         <div class="modal-content" onclick="event.stopPropagation()">
             <img id="art-image" src="img/favicon.png" alt="Album Art">
-            <div id="art-info">Technics - Audio Systems - Professional</div>
+            <div id="art-info">Technics - HiRes - Player</div>
         </div>
     </div>
 
@@ -28,12 +28,12 @@
     </div>
 
     <div class="deck-container">
-        <img src="img/compact_disc_w.png" class="cd-logo-bottom" alt="Compact Disc Digital Audio">
+        <img src="img/HR_logo.png" class="hr-logo-bottom" alt="High Resolution Audio Player">
 
         <header class="brand-header">
                 <img src="img/Technics_logo.png" class="main-logo" alt="Technics">
             </a>
-            <div class="model-name">Stereo Compact Disc Player SL-PS740A</div>
+            <div class="model-name">High Resolution Audio Player</div>
         </header>
 
         <div class="tray-outer-slot">
@@ -103,19 +103,13 @@
                     <button class="btn" onclick="handleNumKey(9)">9</button>
                     <button class="btn" onclick="handleNumKey(0)">0</button>
                 </div>
-
-
-
        <div class="tone-controls-section">
     <div class="tone-group-wrapper">
-        
-        
         <div class="tone-hatch-frame" onclick="toggleToneHatch()">
             <div id="tone-hatch-block" class="hatch-closed">
                 <div class="hatch-texture"></div>
                 <span class="hatch-label">TONE CONTROL</span>
             </div>
-            
             <div class="tone-controls-row">
                 <div class="tone-group">
                     <span class="label-tiny">BASS</span>
@@ -123,11 +117,11 @@
                         <button class="btn btn-tone" 
                             onmouseenter="showToneDisplay('BASS', bassLevel)" 
                             onmouseleave="startToneTimeout()" 
-                            onclick="event.stopPropagation(); adjustBass(-2)">Bass -</button>
+                            onclick="event.stopPropagation(); adjustBass(-1)">Bass -</button>
                         <button class="btn btn-tone" 
                             onmouseenter="showToneDisplay('BASS', bassLevel)" 
                             onmouseleave="startToneTimeout()" 
-                            onclick="event.stopPropagation(); adjustBass(2)">Bass +</button>
+                            onclick="event.stopPropagation(); adjustBass(1)">Bass +</button>
                     </div>
                 </div>
 
@@ -137,19 +131,17 @@
                         <button class="btn btn-tone" 
                             onmouseenter="showToneDisplay('TREBLE', trebleLevel)" 
                             onmouseleave="startToneTimeout()" 
-                            onclick="event.stopPropagation(); adjustTreble(-2)">Treble -</button>
+                            onclick="event.stopPropagation(); adjustTreble(-1)">Treble -</button>
                         <button class="btn btn-tone" 
                             onmouseenter="showToneDisplay('TREBLE', trebleLevel)" 
                             onmouseleave="startToneTimeout()" 
-                            onclick="event.stopPropagation(); adjustTreble(2)">Treble +</button>
+                            onclick="event.stopPropagation(); adjustTreble(1)">Treble +</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
                 <div class="transport-grid">
                     <div class="eject-section">
@@ -226,5 +218,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
