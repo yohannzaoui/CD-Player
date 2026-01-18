@@ -332,27 +332,57 @@ audio.ontimeupdate = () => {
 
 function handleNumKey(num) {
     if (!playlist.length) return;
-    clearTimeout(inputTimeout);
+
+    const tDisplay = document.getElementById('t-d1').parentElement;
+    // Annule tout timeout précédent
+    if (inputTimeout) {
+        clearTimeout(inputTimeout);
+        inputTimeout = null;
+    }
+
+    // Si A-B actif → bloque la piste et clignote 0.8s
+    if (isABActive()) {
+        updateDig('t', currentIndex + 1); // Remet sur la piste actuelle
+        tDisplay.classList.add('vfd-input-blink'); // clignote
+        setTimeout(() => tDisplay.classList.remove('vfd-input-blink'), 800);
+        inputBuffer = ""; // on ne stocke pas le chiffre
+        return;
+    }
+
+    // Stocke le chiffre dans le buffer
     inputBuffer += num;
-    document.getElementById('t-d1').parentElement.classList.add('vfd-input-blink');
+    tDisplay.classList.add('vfd-input-blink');
     updateDig('t', parseInt(inputBuffer));
-    if (inputBuffer.length >= 2) executeJump();
-    else inputTimeout = setTimeout(() => { executeJump(); }, 2000);
+
+    // Si deux chiffres tapés, saute directement
+    if (inputBuffer.length >= 2) {
+        executeJump();
+    } else {
+        // Sinon, attend 2s pour que l'utilisateur finisse de taper
+        inputTimeout = setTimeout(() => executeJump(), 2000);
+    }
 }
 
 function executeJump() {
-    document.getElementById('t-d1').parentElement.classList.remove('vfd-input-blink');
-    let trackNum = parseInt(inputBuffer);
-    if (isABActive()) {
-    updateDig('t', currentIndex + 1);
-    inputBuffer = "";
-    return;
-}
+    const tDisplay = document.getElementById('t-d1').parentElement;
+    tDisplay.classList.remove('vfd-input-blink');
 
-if (!isNaN(trackNum) && trackNum > 0 && trackNum <= playlist.length)
-    loadTrack(trackNum - 1);
-    else updateDig('t', currentIndex + 1);
+    let trackNum = parseInt(inputBuffer);
+
+    // Vider le buffer et annuler le timeout
+    if (inputTimeout) { clearTimeout(inputTimeout); inputTimeout = null; }
     inputBuffer = "";
+
+    if (isABActive()) {
+        updateDig('t', currentIndex + 1);
+        return;
+    }
+
+    if (!isNaN(trackNum) && trackNum > 0 && trackNum <= playlist.length) {
+        loadTrack(trackNum - 1);
+    } else {
+        updateDig('t', currentIndex + 1);
+    }
 }
 
 function extractMetadata(file) {
