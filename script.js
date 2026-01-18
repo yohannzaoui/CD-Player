@@ -1,7 +1,7 @@
 const audio = new Audio();
 audio.crossOrigin = "anonymous";
 let playlist = [], currentIndex = 0;
-let currentArt = "img/Technics_cover.png", currentMeta = "Technics - CD Player - SL-PS740A";
+let currentArt = "img/Technics_cover.png", currentMeta = "Technics - HiRes - Audio Player";
 let repeatMode = 0, isRandom = false, timeMode = 0, isVUOn = true;
 let pointA = null, pointB = null, isPeakSearching = false;
 let inputBuffer = "", inputTimeout = null, volDisplayTimeout = null;
@@ -13,6 +13,7 @@ let vuMultiplier = 1.2;
 let bassFilter, trebleFilter;
 let bassLevel = 0;   
 let trebleLevel = 0;
+let volumeInt = 2;
 
 const gridWrapper = document.getElementById('grid-numbers-wrapper');
 for(let i=1; i<=20; i++) {
