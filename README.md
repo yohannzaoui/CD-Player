@@ -1,5 +1,3 @@
----
-
 # Technics High Resolution Audio PLayer User Manual
 
 This digital interface is a high-fidelity recreation of the legendary Technics SL-PS740A Compact Disc player. It features a professional-grade Virtual Fluorescent Display (VFD), high-precision VU meters, and advanced track management.
