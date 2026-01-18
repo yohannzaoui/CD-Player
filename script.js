@@ -1,7 +1,7 @@
 const audio = new Audio();
 audio.crossOrigin = "anonymous";
 let playlist = [], currentIndex = 0;
-let currentArt = "img/Technics_cover.png", currentMeta = "Technics - CD Player - SL-PS740A";
+let currentArt = "img/Technics_cover.png", currentMeta = "Technics - HiRes - Audio Player";
 let repeatMode = 0, isRandom = false, timeMode = 0, isVUOn = true;
 let pointA = null, pointB = null, isPeakSearching = false;
 let inputBuffer = "", inputTimeout = null, volDisplayTimeout = null;
@@ -13,6 +13,7 @@ let vuMultiplier = 1.2;
 let bassFilter, trebleFilter;
 let bassLevel = 0;   
 let trebleLevel = 0;
+
 
 const gridWrapper = document.getElementById('grid-numbers-wrapper');
 for(let i=1; i<=20; i++) {
@@ -36,7 +37,11 @@ function showVolumeDisplay() {
         document.getElementById('s-d2').innerText = "0";
     } else {
         timeLabel.innerText = "VOLUME";
-        let volPerc = Math.round(audio.volume * 99);
+        
+        // --- CORRECTION ICI : On arrondit à l'unité la plus proche ---
+        let volPerc = Math.round(audio.volume * 100); 
+        if (volPerc > 99) volPerc = 99; // Pour rester sur 2 chiffres max
+        
         const s = volPerc.toString().padStart(2, '0');
         document.getElementById('m-d1').innerText = " ";
         document.getElementById('m-d2').innerText = " ";
@@ -72,12 +77,17 @@ function startVolRepeat(dir) {
     stopVolRepeat();
     isMuted = false;
     const adjust = () => {
-        if (dir === 1) audio.volume = Math.min(1, audio.volume + (1/99));
-        else audio.volume = Math.max(0, audio.volume - (1/99));
+        // On calcule le nouveau volume en restant sur des multiples de 0.01
+        let step = 0.01;
+        let newVol = dir === 1 ? audio.volume + step : audio.volume - step;
+        
+        // On arrondit pour éviter les bugs de virgule infinie du navigateur
+        audio.volume = Math.max(0, Math.min(1, Math.round(newVol * 100) / 100));
+        
         showVolumeDisplay();
     };
     adjust();
-    volRepeatInterval = setInterval(adjust, 100);
+    volRepeatInterval = setInterval(adjust, 300);
 }
 
 function stopVolRepeat() {
@@ -203,6 +213,11 @@ document.getElementById('ab-btn').onclick = () => {
     renderABLoop(); // met à jour la barre
 };
 
+function isABActive() {
+    return pointA !== null;
+}
+
+
 document.getElementById('power-reset-btn').onclick = () => {
     audio.pause(); audio.src = ""; audio.volume = 0.02;
     playlist = []; currentIndex = 0; pointA = null; pointB = null; isMuted = false;
@@ -315,6 +330,7 @@ if ('mediaSession' in navigator) {
 }
 
 audio.onended = () => {
+    if (isABActive()) return;
     if (repeatMode === 1) audio.play();
     else if (isRandom || repeatMode === 2 || currentIndex < playlist.length - 1) loadTrack(currentIndex + 1);
 };
@@ -326,20 +342,57 @@ audio.ontimeupdate = () => {
 
 function handleNumKey(num) {
     if (!playlist.length) return;
-    clearTimeout(inputTimeout);
+
+    const tDisplay = document.getElementById('t-d1').parentElement;
+    // Annule tout timeout précédent
+    if (inputTimeout) {
+        clearTimeout(inputTimeout);
+        inputTimeout = null;
+    }
+
+    // Si A-B actif → bloque la piste et clignote 0.8s
+    if (isABActive()) {
+        updateDig('t', currentIndex + 1); // Remet sur la piste actuelle
+        tDisplay.classList.add('vfd-input-blink'); // clignote
+        setTimeout(() => tDisplay.classList.remove('vfd-input-blink'), 800);
+        inputBuffer = ""; // on ne stocke pas le chiffre
+        return;
+    }
+
+    // Stocke le chiffre dans le buffer
     inputBuffer += num;
-    document.getElementById('t-d1').parentElement.classList.add('vfd-input-blink');
+    tDisplay.classList.add('vfd-input-blink');
     updateDig('t', parseInt(inputBuffer));
-    if (inputBuffer.length >= 2) executeJump();
-    else inputTimeout = setTimeout(() => { executeJump(); }, 2000);
+
+    // Si deux chiffres tapés, saute directement
+    if (inputBuffer.length >= 2) {
+        executeJump();
+    } else {
+        // Sinon, attend 2s pour que l'utilisateur finisse de taper
+        inputTimeout = setTimeout(() => executeJump(), 2000);
+    }
 }
 
 function executeJump() {
-    document.getElementById('t-d1').parentElement.classList.remove('vfd-input-blink');
+    const tDisplay = document.getElementById('t-d1').parentElement;
+    tDisplay.classList.remove('vfd-input-blink');
+
     let trackNum = parseInt(inputBuffer);
-    if (!isNaN(trackNum) && trackNum > 0 && trackNum <= playlist.length) loadTrack(trackNum - 1);
-    else updateDig('t', currentIndex + 1);
+
+    // Vider le buffer et annuler le timeout
+    if (inputTimeout) { clearTimeout(inputTimeout); inputTimeout = null; }
     inputBuffer = "";
+
+    if (isABActive()) {
+        updateDig('t', currentIndex + 1);
+        return;
+    }
+
+    if (!isNaN(trackNum) && trackNum > 0 && trackNum <= playlist.length) {
+        loadTrack(trackNum - 1);
+    } else {
+        updateDig('t', currentIndex + 1);
+    }
 }
 
 function extractMetadata(file) {
@@ -385,8 +438,14 @@ document.getElementById('file-input').onchange = (e) => {
     }
 };
 
-document.getElementById('next-btn').onclick = () => loadTrack(currentIndex + 1);
-document.getElementById('prev-btn').onclick = () => loadTrack(currentIndex - 1);
+document.getElementById('next-btn').onclick = () => {
+    if (isABActive()) return;
+    loadTrack(currentIndex + 1);
+};
+document.getElementById('prev-btn').onclick = () => {
+    if (isABActive()) return;
+    loadTrack(currentIndex - 1);
+};
 document.getElementById('eject-btn').onclick = () => document.getElementById('tray-front').classList.toggle('open');
 document.getElementById('random-btn').onclick = () => { 
     isRandom = !isRandom; 
@@ -527,19 +586,27 @@ function toggleVUHatch() {
 
 
 function adjustBass(change) {
-    // On limite entre -10 et +10 dB
+    // On s'assure que le changement est bien de 1 ou -1
+    // On limite strictement entre -10 et +10 dB
     bassLevel = Math.max(-10, Math.min(10, bassLevel + change));
+    
     if (bassFilter) {
+        // setTargetAtTime permet une transition douce pour l'oreille
         bassFilter.gain.setTargetAtTime(bassLevel, audioCtx.currentTime, 0.01);
     }
+    
+    // On affiche immédiatement le nouveau palier
     showToneDisplay("BASS", bassLevel);
 }
 
 function adjustTreble(change) {
+    // Même logique pour les aigus
     trebleLevel = Math.max(-10, Math.min(10, trebleLevel + change));
+    
     if (trebleFilter) {
         trebleFilter.gain.setTargetAtTime(trebleLevel, audioCtx.currentTime, 0.01);
     }
+    
     showToneDisplay("TREBLE", trebleLevel);
 }
 
