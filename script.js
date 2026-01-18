@@ -86,7 +86,7 @@ function startVolRepeat(dir) {
         showVolumeDisplay();
     };
     adjust();
-    volRepeatInterval = setInterval(adjust, 100);
+    volRepeatInterval = setInterval(adjust, 300);
 }
 
 function stopVolRepeat() {
