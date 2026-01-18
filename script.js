@@ -71,18 +71,26 @@ const muteBtn = document.getElementById('mute-btn');
 function startVolRepeat(dir) {
     stopVolRepeat();
     isMuted = false;
+    
     const adjust = () => {
-        // AU LIEU DE : audio.volume + (1/99)
-        // ON UTILISE : 0.01 (qui correspond exactement à 1 unité sur 100)
+        // On récupère le volume actuel
+        let currentVol = audio.volume;
+        
         if (dir === 1) {
-            audio.volume = Math.min(1, audio.volume + 0.01);
+            // Monte de 0.01 (soit 1 palier sur l'afficheur)
+            audio.volume = Math.min(1, Math.round((currentVol + 0.01) * 100) / 100);
         } else {
-            audio.volume = Math.max(0, audio.volume - 0.01);
+            // Baisse de 0.01
+            audio.volume = Math.max(0, Math.round((currentVol - 0.01) * 100) / 100);
         }
         showVolumeDisplay();
     };
-    adjust();
-    volRepeatInterval = setInterval(adjust, 100); // 100ms = vitesse de répétition
+
+    // Premier ajustement immédiat au clic
+    adjust(); 
+
+    // Lance la répétition seulement si on laisse appuyé plus de 500ms
+    volRepeatInterval = setInterval(adjust, 100);
 }
 
 function stopVolRepeat() {
