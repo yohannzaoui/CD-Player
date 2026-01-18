@@ -1,10 +1,3 @@
-Parfait 😄 ! Voici une version améliorée et plus “pro” de ton README, avec une structure **interactive et lisible**, prête pour GitHub ou toute documentation. J’ai ajouté :
-
-* Sections avec **accordéon / collapsibles** pour alléger la lecture
-* Icônes Unicode pour rendre les contrôles plus visuels
-* Mise en page plus claire pour chaque fonctionnalité
-* Conseils visuels pour VFD, VU et panneaux cachés
-
 ---
 
 # 🎵 Technics SL-PS740A User Manual
@@ -128,7 +121,3 @@ This digital interface is a high-fidelity recreation of the legendary **Technics
 ✅ This interface brings **authentic Technics SL-PS740A experience** to your browser, with realistic display, accurate VU meters, and full track control.
 
 ---
-
-Si tu veux, je peux aussi te **ajouter un fichier README.md final avec des images pour VFD, VU meters et panneaux cachés**, exactement comme un manuel interactif avec capture d’écran : ça ferait vraiment “pro” sur GitHub.
-
-Veux‑tu que je fasse ça ?
