@@ -306,10 +306,13 @@ function updateMediaSession() {
 function loadTrack(idx) {
     if (!playlist.length) return;
 
-    // 1. On vérifie l'état AVANT de changer la source
+    const timeDisplay = document.getElementById('main-time-display');
+    
+    // ÉTAT 1 : Est-ce le premier chargement ? (L'audio n'a pas encore de source)
     const isFirstLoad = (!audio.src || audio.src === "" || audio.src.includes("null"));
-    // On considère qu'on est en pause si l'audio est en pause OU si l'affichage clignote
-    const wasPaused = audio.paused || document.getElementById('main-time-display').classList.contains('vfd-blink-pause');
+    
+    // ÉTAT 2 : Est-ce que l'utilisateur a mis en pause ? (L'afficheur clignote)
+    const isPausedByUI = timeDisplay.classList.contains('vfd-blink-pause');
 
     if (isRandom && idx !== currentIndex) {
         idx = Math.floor(Math.random() * playlist.length);
@@ -317,7 +320,7 @@ function loadTrack(idx) {
     currentIndex = (idx + playlist.length) % playlist.length;
     const currentFile = playlist[currentIndex];
     
-    // Mise à jour de la source
+    if (audio.src) URL.revokeObjectURL(audio.src);
     audio.src = URL.createObjectURL(currentFile);
     
     const formatDisplay = document.getElementById('file-format-display');
@@ -328,18 +331,24 @@ function loadTrack(idx) {
     updateDig('t', currentIndex + 1);
     updateGrid(); 
 
-    // 2. LOGIQUE DE LECTURE (L'ordre est crucial ici)
-    if (isFirstLoad || !wasPaused) {
-        // Si c'est le 1er chargement OU si on n'était pas en pause
+    // LOGIQUE DE DÉCISION
+    if (isFirstLoad) {
+        // Force la lecture immédiate au chargement de la playlist
         audio.play().then(() => {
-            document.getElementById('main-time-display').classList.remove('vfd-blink-pause');
-        }).catch(() => {});
-    } else {
-        // Si on était en pause : on force la pause et le clignotement
+            timeDisplay.classList.remove('vfd-blink-pause');
+        }).catch(e => console.log("Init play"));
+    } else if (isPausedByUI) {
+        // Si ça clignotait déjà, on force l'audio à rester en pause
         audio.pause();
         audio.currentTime = 0;
-        document.getElementById('main-time-display').classList.add('vfd-blink-pause');
         updateTimeDisplay();
+        // On s'assure que le clignotement reste actif
+        timeDisplay.classList.add('vfd-blink-pause');
+    } else {
+        // On était en lecture, on continue
+        audio.play().then(() => {
+            timeDisplay.classList.remove('vfd-blink-pause');
+        });
     }
 
     updateMediaSession();
@@ -487,13 +496,13 @@ document.getElementById('file-input').onchange = (e) => {
 document.getElementById('next-btn').onclick = () => {
     if (isABActive()) return;
     
-    // On mémorise si on était en pause AVANT de changer
-    const wasPaused = audio.paused || document.getElementById('main-time-display').classList.contains('vfd-blink-pause');
+    // On vérifie si on était en pause AVANT de changer
+    const wasPausedBefore = audio.paused;
     
     loadTrack(currentIndex + 1);
     
-    // Si on était en pause, on force le maintien de la pause après le chargement
-    if (wasPaused) {
+    // Si on était en pause, on s'assure que l'audio le reste après le chargement
+    if (wasPausedBefore) {
         audio.pause();
         document.getElementById('main-time-display').classList.add('vfd-blink-pause');
     }
@@ -502,13 +511,13 @@ document.getElementById('next-btn').onclick = () => {
 document.getElementById('prev-btn').onclick = () => {
     if (isABActive()) return;
     
-    // On mémorise si on était en pause AVANT de changer
-    const wasPaused = audio.paused || document.getElementById('main-time-display').classList.contains('vfd-blink-pause');
+    // On vérifie si on était en pause AVANT de changer
+    const wasPausedBefore = audio.paused;
     
     loadTrack(currentIndex - 1);
     
-    // Si on était en pause, on force le maintien de la pause après le chargement
-    if (wasPaused) {
+    // Si on était en pause, on s'assure que l'audio le reste après le chargement
+    if (wasPausedBefore) {
         audio.pause();
         document.getElementById('main-time-display').classList.add('vfd-blink-pause');
     }
