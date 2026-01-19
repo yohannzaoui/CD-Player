@@ -306,10 +306,10 @@ function updateMediaSession() {
 function loadTrack(idx) {
     if (!playlist.length) return;
 
-    const timeDisplay = document.getElementById('main-time-display');
-    // On mémorise si l'appareil était en mode pause (clignotant) avant le changement
-    const wasPaused = timeDisplay.classList.contains('vfd-blink-pause');
+    // 1. On vérifie l'état AVANT de changer la source
     const isFirstLoad = (!audio.src || audio.src === "" || audio.src.includes("null"));
+    // On considère qu'on est en pause si l'audio est en pause OU si l'affichage clignote
+    const wasPaused = audio.paused || document.getElementById('main-time-display').classList.contains('vfd-blink-pause');
 
     if (isRandom && idx !== currentIndex) {
         idx = Math.floor(Math.random() * playlist.length);
@@ -317,10 +317,9 @@ function loadTrack(idx) {
     currentIndex = (idx + playlist.length) % playlist.length;
     const currentFile = playlist[currentIndex];
     
-    if (audio.src) URL.revokeObjectURL(audio.src);
+    // Mise à jour de la source
     audio.src = URL.createObjectURL(currentFile);
     
-    // Affichage format (on ne touche à rien ici)
     const formatDisplay = document.getElementById('file-format-display');
     if (formatDisplay && currentFile.name) {
         formatDisplay.innerText = currentFile.name.split('.').pop().toUpperCase();
@@ -329,22 +328,18 @@ function loadTrack(idx) {
     updateDig('t', currentIndex + 1);
     updateGrid(); 
 
-    // LOGIQUE DE LECTURE :
-    if (isFirstLoad) {
-        // Premier chargement : Lecture automatique
-        audio.play();
-        timeDisplay.classList.remove('vfd-blink-pause');
-    } else if (wasPaused) {
-        // Si on était en pause : on force l'audio à rester en pause
+    // 2. LOGIQUE DE LECTURE (L'ordre est crucial ici)
+    if (isFirstLoad || !wasPaused) {
+        // Si c'est le 1er chargement OU si on n'était pas en pause
+        audio.play().then(() => {
+            document.getElementById('main-time-display').classList.remove('vfd-blink-pause');
+        }).catch(() => {});
+    } else {
+        // Si on était en pause : on force la pause et le clignotement
         audio.pause();
         audio.currentTime = 0;
-        // On s'assure que l'affichage continue de clignoter
-        timeDisplay.classList.add('vfd-blink-pause');
+        document.getElementById('main-time-display').classList.add('vfd-blink-pause');
         updateTimeDisplay();
-    } else {
-        // Si on était en lecture : on continue
-        audio.play();
-        timeDisplay.classList.remove('vfd-blink-pause');
     }
 
     updateMediaSession();
@@ -488,14 +483,37 @@ document.getElementById('file-input').onchange = (e) => {
     }
 };
 
+
 document.getElementById('next-btn').onclick = () => {
     if (isABActive()) return;
+    
+    // On mémorise si on était en pause AVANT de changer
+    const wasPaused = audio.paused || document.getElementById('main-time-display').classList.contains('vfd-blink-pause');
+    
     loadTrack(currentIndex + 1);
+    
+    // Si on était en pause, on force le maintien de la pause après le chargement
+    if (wasPaused) {
+        audio.pause();
+        document.getElementById('main-time-display').classList.add('vfd-blink-pause');
+    }
 };
+
 document.getElementById('prev-btn').onclick = () => {
     if (isABActive()) return;
+    
+    // On mémorise si on était en pause AVANT de changer
+    const wasPaused = audio.paused || document.getElementById('main-time-display').classList.contains('vfd-blink-pause');
+    
     loadTrack(currentIndex - 1);
+    
+    // Si on était en pause, on force le maintien de la pause après le chargement
+    if (wasPaused) {
+        audio.pause();
+        document.getElementById('main-time-display').classList.add('vfd-blink-pause');
+    }
 };
+
 document.getElementById('eject-btn').onclick = () => document.getElementById('tray-front').classList.toggle('open');
 document.getElementById('random-btn').onclick = () => { 
     isRandom = !isRandom; 
