@@ -552,7 +552,7 @@ body {
 /* Remplace .volume-label par la classe que tu utilises pour le texte "VOLUME" */
 .volume-label {
     display: block; /* S'assure que l'élément peut être déplacé */
-    transform: translateY(15px); /* Descend le mot de 15px vers le bas */
+    transform: translateY(50px); /* Descend le mot de 15px vers le bas */
 }
 
 .label-tiny {
