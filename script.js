@@ -639,9 +639,9 @@ function checkLock(e) {
         setTimeout(() => lockIndicator.classList.remove('vfd-input-blink'), 500);
         
         if (e) e.stopPropagation();
-        return true; // C'est bloqué
+        return true;
     }
-    return false; // Ce n'est pas bloqué
+    return false;
 }
 
 /**
@@ -650,10 +650,9 @@ function checkLock(e) {
 const vfdColors = [
     '#40e0ff', // Blue (Original)
     '#50ff7a', // Green
-    '#ffb84d', // Amber
+    '#FFF703', // Yellow
     '#ffffff', // White
     '#a0a0a0', // Silver
-
 ];
 
 let currentColorIndex = 0;
