@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.cdnfonts.com/css/ds-digital" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
 </head>
@@ -32,7 +33,7 @@
     </div>
 
     <div class="deck-container">
-        <img src="img/HR_logo.png" class="hr-logo-bottom" alt="High Resoltion">
+        <img src="img/HR_logo.png" class="hr-logo-bottom" alt="High Resolution">
 
    
 
@@ -158,23 +159,25 @@
                 <div class="transport-grid">
                     <div class="eject-section">
                         <span class="upper-label">OPEN/CLOSE</span>
-                        <button class="btn" id="eject-btn">⏏</button>
+                        <button class="btn" id="eject-btn"><i class="fas fa-eject"></i></button>
                     </div>
                     <div class="eject-section">
                         <span class="upper-label">PREV</span>
-                    <button class="btn" id="prev-btn">|◀◀</button>
+                    <button class="btn" id="prev-btn"><i class="fas fa-backward-step"></i></button>
                         </div>
                         <div class="eject-section">
                         <span class="upper-label">PLAY/PAUSE</span>
-                    <button class="btn" id="play-btn">▶ / ||</button>
+                    <button class="btn" id="play-btn">
+    <i class="fas fa-play"></i><span style="margin: 0 2px;">/</span><i class="fas fa-pause"></i>
+</button>
                             </div>
                         <div class="eject-section">
                         <span class="upper-label">NEXT</span>
-                    <button class="btn" id="next-btn">▶▶|</button>
+                    <button class="btn" id="next-btn"><i class="fas fa-forward-step"></i></button>
                     </div>
                     <div class="eject-section">
                         <span class="upper-label">STOP</span>
-                    <button class="btn" id="stop-btn">■</button>
+                    <button class="btn" id="stop-btn"><i class="fas fa-stop"></i></button>
                     </div>
                 </div>
             </div>
